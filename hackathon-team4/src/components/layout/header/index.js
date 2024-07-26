@@ -1,5 +1,7 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import { useState } from "react";
+import Login from "../../login/Login";
 
 const HeaderSection = styled.header`
   width: 100%;
@@ -97,7 +99,31 @@ const StyledLink = styled(Link)`
   height: 40px;
 `;
 
+const OpenModalButton = styled.button`
+  background: none;
+  border: none;
+  font-family: GmarketSans;
+  font-size: 15.151px;
+  cursor: pointer;
+  background: linear-gradient(
+    90deg,
+    #e02525 0%,
+    #7a1414 25%,
+    #e02525 50%,
+    #ff9494 75%,
+    #e02525 100%
+  );
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+`;
+
 const Header = () => {
+  const [showLoginModal, setShowLoginModal] = useState(false);
+
+  const openLoginModal = () => setShowLoginModal(true);
+  const closeLoginModal = () => setShowLoginModal(false);
+
   return (
     <HeaderSection>
       <div className="top-border"></div>
@@ -109,13 +135,13 @@ const Header = () => {
         </div>
         <div className="category">
           <div className="upper">
-            <StyledLink to="/">로그인</StyledLink>
+            <OpenModalButton onClick={openLoginModal}>로그인</OpenModalButton>
             <StyledLink to="/">|</StyledLink>
             <StyledLink to="/">회원가입</StyledLink>
           </div>
           <div className="lower">
             <div className="myChat">
-              <StyledLink to="/">나의 모임</StyledLink>
+              <StyledLink to="/">나의 모임 찾기</StyledLink>
             </div>
             <StyledLink to="/">요즘 뭐햐</StyledLink>
             <StyledLink to="/">모임 찾기</StyledLink>
@@ -123,6 +149,10 @@ const Header = () => {
           </div>
         </div>
       </div>
+      <Login
+        showLoginModal={showLoginModal}
+        closeLoginModal={closeLoginModal}
+      />
     </HeaderSection>
   );
 };
