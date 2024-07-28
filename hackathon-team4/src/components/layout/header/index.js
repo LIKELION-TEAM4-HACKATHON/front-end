@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import Login from "../../login/Login";
+import Join from "../../join/Join";
 
 const HeaderSection = styled.header`
   width: 100%;
@@ -31,6 +32,7 @@ const HeaderSection = styled.header`
   .logo {
     display: flex;
     margin-left: 150px;
+    margin-top: 20px;
     img {
       width: 132px;
       height: 95px;
@@ -53,7 +55,8 @@ const HeaderSection = styled.header`
       font-size: 15.151px;
       gap: 20px;
 
-      a {
+      a,
+      div {
         background: linear-gradient(
           90deg,
           #e02525 0%,
@@ -120,9 +123,12 @@ const OpenModalButton = styled.button`
 
 const Header = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
+  const [showJoinModal, setShowJoinModal] = useState(false);
 
   const openLoginModal = () => setShowLoginModal(true);
   const closeLoginModal = () => setShowLoginModal(false);
+  const openJoinModal = () => setShowJoinModal(true);
+  const closeJoinModal = () => setShowJoinModal(false);
 
   return (
     <HeaderSection>
@@ -136,8 +142,8 @@ const Header = () => {
         <div className="category">
           <div className="upper">
             <OpenModalButton onClick={openLoginModal}>로그인</OpenModalButton>
-            <StyledLink to="/">|</StyledLink>
-            <StyledLink to="/">회원가입</StyledLink>
+            <div>|</div>
+            <OpenModalButton onClick={openJoinModal}>회원가입</OpenModalButton>
           </div>
           <div className="lower">
             <div className="myChat">
@@ -153,6 +159,7 @@ const Header = () => {
         showLoginModal={showLoginModal}
         closeLoginModal={closeLoginModal}
       />
+      <Join showJoinModal={showJoinModal} closeJoinModal={closeJoinModal} />
     </HeaderSection>
   );
 };
