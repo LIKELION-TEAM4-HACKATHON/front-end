@@ -1,4 +1,10 @@
 import styled from "styled-components";
+import { useEffect, useState } from "react";
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: "/api",
+});
 
 const ProfilShowSection = styled.section`
   width: 100%;
@@ -29,7 +35,7 @@ const ProfileImage = styled.img`
 
 const UserInfo = styled.div`
   display: flex;
-  margin-left: 20px;
+  margin-left: 25px;
 `;
 
 const Nickname = styled.div`
@@ -82,33 +88,69 @@ const Categories = styled.div`
   margin-bottom: 5px;
 `;
 
-const Insta = styled.div`
-  font-size: 23px;
-  opacity: 0.54;
-`;
-
-const Facebook = styled.div`
+const SocialID = styled.div`
   font-size: 23px;
   opacity: 0.54;
 `;
 
 const ProfileShow = () => {
+  const [profileData, setProfileData] = useState(null);
+
+  useEffect(() => {
+    const fetchProfileData = async () => {
+      try {
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+          throw new Error("No token found");
+        }
+
+        console.log("Token found:", token);
+
+        const response = await api.get("/users/me", {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        console.log("Profile data fetched:", response.data);
+
+        setProfileData(response.data);
+      } catch (error) {
+        console.error("Failed to fetch profile data", error);
+      }
+    };
+
+    fetchProfileData();
+  }, []);
+
+  if (!profileData) {
+    return <div>Loading...</div>;
+  }
+
+  const categoriesWithHash = profileData.selfIntroductions
+    .map((category) => `#${category.name}`)
+    .join(" ");
+
   return (
     <ProfilShowSection>
       <TopSection>
         <ProfileImage src="images/arrow-right.svg" alt="Profile" />
         <UserInfo>
-          <Nickname>닉네임</Nickname>
-          <Gender>남</Gender>
+          <Nickname>{profileData.username}</Nickname>
+          <Gender>{profileData.gender}</Gender>
         </UserInfo>
-        <Age>나이</Age>
+        <Age>{profileData.age}</Age>
       </TopSection>
       <BottomSection>
         <MannerScore>매너 점수</MannerScore>
         <AdditionalInfo>
-          <Categories>관심 카테고리</Categories>
-          <Insta>인스타그램:</Insta>
-          <Facebook>페이스북:</Facebook>
+          <Categories>{categoriesWithHash}</Categories>
+          {profileData.instagramId && (
+            <SocialID>인스타그램 아이디: {profileData.instagramId}</SocialID>
+          )}
+          {profileData.facebookId && (
+            <SocialID>페이스북 아이디: {profileData.facebookId}</SocialID>
+          )}
         </AdditionalInfo>
       </BottomSection>
     </ProfilShowSection>
