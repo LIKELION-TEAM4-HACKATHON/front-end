@@ -22,7 +22,7 @@ const Btn = styled.button`
   cursor: ${(props) => (props.disable ? "" : "pointer")};
 `;
 
-const LoginBtn = ({ email, pw, setEmail, setPw }) => {
+const LoginBtn = ({ email, pw, setEmail, setPw, onSuccess }) => {
   const [isDisabled, setIsDisabled] = useState(true);
 
   useEffect(() => {
@@ -60,8 +60,13 @@ const LoginBtn = ({ email, pw, setEmail, setPw }) => {
         console.log("로그인 성공:", response.data);
         localStorage.setItem("accessToken", response.data.accessToken.token);
         localStorage.setItem("refreshToken", response.data.refreshToken.token);
+        onSuccess();
+        alert("정상적으로 로그인 되었습니다.");
+        setEmail("");
+        setPw("");
       }
     } catch (error) {
+      alert("잘못된 아이디 혹은 비밀번호입니다.");
       console.error("로그인 실패:", error.response || error);
       if (error.response && error.response.status === 401) {
         await logout();

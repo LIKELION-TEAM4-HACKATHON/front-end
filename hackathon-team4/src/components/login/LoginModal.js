@@ -47,7 +47,7 @@ const LoginBox = styled.div`
   }
 `;
 
-const LoginModal = ({ email, setEmail, pw, setPw }) => {
+const LoginModal = ({ email, setEmail, pw, setPw, onLoginSuccess }) => {
   const [isJoinModalOpen, setIsJoinModalOpen] = useState(false);
 
   const handleOpenJoinModal = () => {
@@ -67,7 +67,13 @@ const LoginModal = ({ email, setEmail, pw, setPw }) => {
           당신의 일상을 위하여
         </div>
         <LoginInput email={email} setEmail={setEmail} pw={pw} setPw={setPw} />
-        <LoginBtn email={email} setEmail={setEmail} pw={pw} setPw={setPw} />
+        <LoginBtn
+          email={email}
+          setEmail={setEmail}
+          pw={pw}
+          setPw={setPw}
+          onSuccess={onLoginSuccess}
+        />
         <div className="toJoin">
           <p>아직 회원이 아니신가요?</p>
           <button onClick={handleOpenJoinModal}>회원가입</button>

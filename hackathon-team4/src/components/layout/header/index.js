@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import Login from "../../login/Login";
 import Join from "../../join/Join";
 
@@ -52,8 +52,13 @@ const HeaderSection = styled.header`
     }
 
     .upper {
+      align-items: center;
       font-size: 15.151px;
       gap: 20px;
+
+      a {
+        margin-right: 5px;
+      }
 
       a,
       div {
@@ -103,7 +108,8 @@ const StyledLink = styled(Link)`
 `;
 
 const OpenModalButton = styled.button`
-  background: none;
+  display: grid;
+  gap: 20px;
   border: none;
   font-family: GmarketSans;
   font-size: 15.151px;
@@ -118,17 +124,26 @@ const OpenModalButton = styled.button`
   );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  display: inline-block;
 `;
 
 const Header = () => {
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showJoinModal, setShowJoinModal] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(
+    !!localStorage.getItem("accessToken")
+  );
 
   const openLoginModal = () => setShowLoginModal(true);
   const closeLoginModal = () => setShowLoginModal(false);
   const openJoinModal = () => setShowJoinModal(true);
   const closeJoinModal = () => setShowJoinModal(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
+    setIsLoggedIn(false);
+    alert("정상적으로 로그아웃 되었습니다.");
+  };
 
   return (
     <HeaderSection>
@@ -140,11 +155,21 @@ const Header = () => {
           </StyledLink>
         </div>
         <div className="category">
-          <div className="upper">
-            <OpenModalButton onClick={openLoginModal}>로그인</OpenModalButton>
-            <div>|</div>
-            <OpenModalButton onClick={openJoinModal}>회원가입</OpenModalButton>
-          </div>
+          {isLoggedIn ? (
+            <div className="upper">
+              <a href="/mypage">마이페이지</a>
+              <div>|</div>
+              <OpenModalButton onClick={handleLogout}>로그아웃</OpenModalButton>
+            </div>
+          ) : (
+            <div className="upper">
+              <OpenModalButton onClick={openLoginModal}>로그인</OpenModalButton>
+              <div>|</div>
+              <OpenModalButton onClick={openJoinModal}>
+                회원가입
+              </OpenModalButton>
+            </div>
+          )}
           <div className="lower">
             <div className="myChat">
               <StyledLink to="/">나의 모임 찾기</StyledLink>
@@ -158,6 +183,7 @@ const Header = () => {
       <Login
         showLoginModal={showLoginModal}
         closeLoginModal={closeLoginModal}
+        setIsLoggedIn={setIsLoggedIn}
       />
       <Join showJoinModal={showJoinModal} closeJoinModal={closeJoinModal} />
     </HeaderSection>
