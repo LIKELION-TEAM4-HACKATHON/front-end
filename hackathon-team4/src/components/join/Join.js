@@ -8,6 +8,11 @@ const Join = ({ showJoinModal, closeJoinModal }) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
   const [nickname, setNickname] = useState("");
+  const [instagram, setInstagram] = useState("");
+  const [facebook, setFacebook] = useState("");
+  const [selectedGender, setSelectedGender] = useState("");
+  const [selectedAge, setSelectedAge] = useState("");
+  const [selectedHashtags, setSelectedHashtags] = useState([]);
 
   return (
     <Modal showModal={showJoinModal} closeModal={closeJoinModal}>
@@ -22,6 +27,16 @@ const Join = ({ showJoinModal, closeJoinModal }) => {
         setName={setName}
         nickname={nickname}
         setNickname={setNickname}
+        instagram={instagram}
+        setInstagram={setInstagram}
+        facebook={facebook}
+        setFacebook={setFacebook}
+        selectedGender={selectedGender}
+        setSelectedGender={setSelectedGender}
+        selectedAge={selectedAge}
+        setSelectedAge={setSelectedAge}
+        selectedHashtags={selectedHashtags}
+        setSelectedHashtags={setSelectedHashtags}
       />
     </Modal>
   );

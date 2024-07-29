@@ -1,9 +1,15 @@
 import { useState } from "react";
+import axios from "axios";
 import JoinInput1 from "./JoinInput1";
 import JoinInput2 from "./JoinInput2";
 import JoinInput3 from "./JoinInput3";
 import JoinInput4 from "./JoinInput4";
+import JoinComplete from "./JoinComplete";
 import styled from "styled-components";
+
+const api = axios.create({
+  baseURL: "/api",
+});
 
 const NextButtonContainer = styled.div`
   display: flex;
@@ -64,13 +70,22 @@ const JoinModal = ({
   setName,
   nickname,
   setNickname,
+  instagram,
+  setInstagram,
+  facebook,
+  setFacebook,
+  selectedGender,
+  setSelectedGender,
+  selectedAge,
+  setSelectedAge,
+  selectedHashtags,
+  setSelectedHashtags,
 }) => {
   const [step, setStep] = useState(1);
   const [isStep1Valid, setIsStep1Valid] = useState(false);
   const [isStep2Valid, setIsStep2Valid] = useState(false);
   const [isStep3Valid, setIsStep3Valid] = useState(false);
-  const [instagram, setInstagram] = useState("");
-  const [facebook, setFacebook] = useState("");
+  const [isSignupComplete, setIsSignupComplete] = useState(false);
 
   const handleNext = () => {
     if (step === 1 && isStep1Valid) {
@@ -80,7 +95,7 @@ const JoinModal = ({
     } else if (step === 3 && isStep3Valid) {
       setStep(4);
     } else if (step === 4) {
-      // Submit the form
+      handleSignup();
     }
   };
 
@@ -93,6 +108,68 @@ const JoinModal = ({
       setStep(3);
     }
   };
+
+  const handleSignup = async () => {
+    const data = {
+      email,
+      password,
+      realname: name,
+      username: nickname,
+      gender: selectedGender,
+      age: selectedAge,
+      instagramId: instagram,
+      facebookId: facebook,
+      selfIntroductions: selectedHashtags.map((hashtag) => {
+        switch (hashtag) {
+          case "나 찾기":
+            return 1;
+          case "자기 계발":
+            return 2;
+          case "야외 활동":
+            return 3;
+          case "힐링":
+            return 4;
+          case "예술":
+            return 5;
+          default:
+            return 0;
+        }
+      }),
+    };
+
+    console.log("Sending data:", data);
+
+    try {
+      const response = await api.post("/auth/signup", data, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      console.log("Response:", response);
+
+      if (response.status === 200) {
+        setIsSignupComplete(true);
+      } else {
+        console.error("Signup failed with status:", response.status);
+      }
+    } catch (error) {
+      console.error("An error occurred during signup:", error);
+      if (error.response) {
+        console.error("Error response data:", error.response.data);
+        console.error("Error response status:", error.response.status);
+        console.error("Error response headers:", error.response.headers);
+      } else if (error.request) {
+        console.error("Error request data:", error.request);
+      } else {
+        console.error("Error message:", error.message);
+      }
+    }
+  };
+
+  if (isSignupComplete) {
+    return <JoinComplete />;
+  }
 
   return (
     <div>
@@ -127,6 +204,10 @@ const JoinModal = ({
             setName={setName}
             nickname={nickname}
             setNickname={setNickname}
+            selectedGender={selectedGender}
+            setSelectedGender={setSelectedGender}
+            selectedAge={selectedAge}
+            setSelectedAge={setSelectedAge}
             onValidityChange={setIsStep2Valid}
           />
           <NextButtonContainer>
@@ -144,7 +225,11 @@ const JoinModal = ({
               뒤로가기
             </PrevButton>
           </PrevButtonContainer>
-          <JoinInput3 onValidityChange={setIsStep3Valid} />
+          <JoinInput3
+            selectedHashtags={selectedHashtags}
+            setSelectedHashtags={setSelectedHashtags}
+            onValidityChange={setIsStep3Valid}
+          />
           <NextButtonContainer>
             <NextButton onClick={handleNext} disabled={!isStep3Valid}>
               다음

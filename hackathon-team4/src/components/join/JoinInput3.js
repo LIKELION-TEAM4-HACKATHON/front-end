@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 const InputBox = styled.div`
   margin-top: 30px;
@@ -54,14 +54,16 @@ const HashtagButton = styled(Button)`
   color: ${(props) => (props.isSelected ? "#fff" : "#EEA790")};
   box-shadow: ${(props) =>
     props.isSelected ? "none" : "0px -1px 3px 0px rgba(0, 0, 0, 0.3) inset"};
-  margin-bottom: 10px; /* Add space between rows of buttons if needed */
+  margin-bottom: 10px;
 `;
 
 const hashtags = ["나 찾기", "자기 계발", "야외 활동", "힐링", "예술"];
 
-const JoinInput3 = ({ onValidityChange }) => {
-  const [selectedHashtags, setSelectedHashtags] = useState([]);
-
+const JoinInput3 = ({
+  selectedHashtags,
+  setSelectedHashtags,
+  onValidityChange,
+}) => {
   const handleButtonClick = (hashtag) => {
     setSelectedHashtags((prev) => {
       if (prev.includes(hashtag)) {

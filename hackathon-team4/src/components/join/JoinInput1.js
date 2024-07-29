@@ -86,16 +86,15 @@ const JoinInput1 = ({
   setConfirmPassword,
   onValidityChange,
 }) => {
-  const [emailError, setEmailError] = useState(true); // 초기 상태에서 에러로 설정
-  const [passwordError, setPasswordError] = useState(true); // 초기 상태에서 에러로 설정
-  const [confirmPasswordError, setConfirmPasswordError] = useState(true); // 초기 상태에서 에러로 설정
+  const [emailError, setEmailError] = useState(true);
+  const [passwordError, setPasswordError] = useState(true);
+  const [confirmPasswordError, setConfirmPasswordError] = useState(true);
 
   useEffect(() => {
     const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
     const passwordRegex =
       /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
-    // 초기 상태와 현재 입력 상태를 검토하여 에러를 설정합니다.
     const isEmailError = !emailRegex.test(email);
     const isPasswordError =
       password.length < 8 || !passwordRegex.test(password);
@@ -106,7 +105,6 @@ const JoinInput1 = ({
     setPasswordError(isPasswordError);
     setConfirmPasswordError(isConfirmPasswordError);
 
-    // 모든 필드가 유효하고 빈 필드가 없을 때만 버튼 활성화
     const isFormValid =
       !isEmailError &&
       !isPasswordError &&

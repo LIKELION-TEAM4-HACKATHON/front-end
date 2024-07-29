@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 
 const Button = styled.button`
   margin-right: 10px;
@@ -82,11 +82,12 @@ const JoinInput2 = ({
   setName,
   nickname,
   setNickname,
+  selectedGender,
+  setSelectedGender,
+  selectedAge,
+  setSelectedAge,
   onValidityChange,
 }) => {
-  const [selectedGender, setSelectedGender] = useState(null);
-  const [selectedAge, setSelectedAge] = useState(null);
-
   useEffect(() => {
     const isNameValid = name.trim() !== "";
     const isNicknameValid = nickname.trim() !== "";
@@ -136,43 +137,43 @@ const JoinInput2 = ({
       <div className="buttonGroup">
         <div className="row">
           <GenderButton
-            isSelected={selectedGender === "male"}
+            isSelected={selectedGender === "남자"}
             onClick={() =>
-              handleGenderSelect(selectedGender === "male" ? null : "male")
+              handleGenderSelect(selectedGender === "남자" ? null : "남자")
             }
           >
-            남성
+            남자
           </GenderButton>
           <GenderButton
-            isSelected={selectedGender === "female"}
+            isSelected={selectedGender === "여자"}
             onClick={() =>
-              handleGenderSelect(selectedGender === "female" ? null : "female")
+              handleGenderSelect(selectedGender === "여자" ? null : "여자")
             }
           >
-            여성
+            여자
           </GenderButton>
         </div>
         <div className="row">
           <AgeButton
-            isSelected={selectedAge === "4th"}
+            isSelected={selectedAge === "4학년"}
             onClick={() =>
-              handleAgeSelect(selectedAge === "4th" ? null : "4th")
+              handleAgeSelect(selectedAge === "4학년" ? null : "4학년")
             }
           >
             4학년
           </AgeButton>
           <AgeButton
-            isSelected={selectedAge === "5th"}
+            isSelected={selectedAge === "5학년"}
             onClick={() =>
-              handleAgeSelect(selectedAge === "5th" ? null : "5th")
+              handleAgeSelect(selectedAge === "5학년" ? null : "5학년")
             }
           >
             5학년
           </AgeButton>
           <AgeButton
-            isSelected={selectedAge === "6th"}
+            isSelected={selectedAge === "6학년"}
             onClick={() =>
-              handleAgeSelect(selectedAge === "6th" ? null : "6th")
+              handleAgeSelect(selectedAge === "6학년" ? null : "6학년")
             }
           >
             6학년
