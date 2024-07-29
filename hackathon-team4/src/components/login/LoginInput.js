@@ -44,7 +44,6 @@ const InputBox = styled.div`
     font-size: 14px;
     color: red;
     margin-top: 4px;
-    display: ${({ show }) => (show ? "block" : "none")};
   }
 `;
 
@@ -75,9 +74,6 @@ const LoginInput = ({ email, pw, setEmail, setPw }) => {
         onChange={onChangeEmail}
         value={email}
       />
-      <p className="error" show={emailError}>
-        ⚠️ 올바른 이메일 형식이 아닙니다.
-      </p>
       <input
         type="password"
         className="pw"
