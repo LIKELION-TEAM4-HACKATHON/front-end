@@ -29,11 +29,12 @@ const InputBox = styled.div`
     border-radius: 8px;
     box-shadow: 0px 2px 14.7px 0px rgba(0, 0, 0, 0.1) inset;
     display: block;
-    padding: 10px;
     box-sizing: border-box;
     font-size: 21px;
     font-family: KoddiUDOnGothic-Regular;
     margin-bottom: 10px;
+    padding: 10px;
+    align-content: center;
   }
 `;
 
@@ -57,7 +58,7 @@ const HashtagButton = styled(Button)`
   margin-bottom: 10px;
 `;
 
-const hashtags = ["나 찾기", "자기 계발", "야외 활동", "힐링", "예술"];
+const hashtags = ["'나' 찾기", "예술과 교양", "야외활동", "실내활동", "배움"];
 
 const JoinInput3 = ({
   selectedHashtags,
@@ -87,7 +88,7 @@ const JoinInput3 = ({
         <span className="rule">최대 3개 선택</span>
       </div>
       <div className="hashtagBox">
-        {selectedHashtags.map((hashtag) => `#${hashtag}`).join(", ")}
+        {selectedHashtags.map((hashtag) => `#${hashtag}`).join(" ")}
       </div>
       {hashtags.map((hashtag) => (
         <HashtagButton
