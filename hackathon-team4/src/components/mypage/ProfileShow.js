@@ -35,7 +35,7 @@ const ProfileImage = styled.img`
 
 const UserInfo = styled.div`
   display: flex;
-  margin-left: 25px;
+  margin-left: 20px;
 `;
 
 const Nickname = styled.div`
@@ -74,6 +74,10 @@ const Age = styled.div`
 
 const MannerScore = styled.div`
   font-size: 23px;
+  span {
+    color: #e02525;
+    margin-left: 23px;
+  }
 `;
 
 const AdditionalInfo = styled.div`
@@ -142,14 +146,19 @@ const ProfileShow = () => {
         <Age>{profileData.age}</Age>
       </TopSection>
       <BottomSection>
-        <MannerScore>매너 점수</MannerScore>
+        <MannerScore>
+          매너 점수
+          <span>{profileData.averageMannersScore}점</span>
+        </MannerScore>
         <AdditionalInfo>
           <Categories>{categoriesWithHash}</Categories>
           {profileData.instagramId && (
-            <SocialID>인스타그램 아이디: {profileData.instagramId}</SocialID>
+            <SocialID>
+              인스타그램 아이디:&nbsp;{profileData.instagramId}점
+            </SocialID>
           )}
           {profileData.facebookId && (
-            <SocialID>페이스북 아이디: {profileData.facebookId}</SocialID>
+            <SocialID>페이스북 아이디:&nbsp;{profileData.facebookId}</SocialID>
           )}
         </AdditionalInfo>
       </BottomSection>
