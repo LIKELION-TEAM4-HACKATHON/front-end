@@ -138,7 +138,10 @@ const ProfileShow = () => {
   return (
     <ProfilShowSection>
       <TopSection>
-        <ProfileImage src="images/arrow-right.svg" alt="Profile" />
+        <ProfileImage
+          src={profileData.profileImageUrl || "images/arrow-right.svg"}
+          alt="Profile"
+        />
         <UserInfo>
           <Nickname>{profileData.username}</Nickname>
           <Gender>{profileData.gender}</Gender>
@@ -154,7 +157,7 @@ const ProfileShow = () => {
           <Categories>{categoriesWithHash}</Categories>
           {profileData.instagramId && (
             <SocialID>
-              인스타그램 아이디:&nbsp;{profileData.instagramId}점
+              인스타그램 아이디:&nbsp;{profileData.instagramId}
             </SocialID>
           )}
           {profileData.facebookId && (

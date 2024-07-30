@@ -47,6 +47,10 @@ const ImgEdit = styled.div`
   margin-bottom: 20px;
 `;
 
+const FileInput = styled.input`
+  display: none;
+`;
+
 const RightSection = styled.div`
   display: flex;
   flex-direction: column;
@@ -193,6 +197,8 @@ const ProfileEdit = () => {
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({});
   const [selectedHashtags, setSelectedHashtags] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewImage, setPreviewImage] = useState(null);
 
   useEffect(() => {
     const fetchProfileData = async () => {
@@ -223,6 +229,9 @@ const ProfileEdit = () => {
           facebookId: response.data.facebookId,
         });
         setSelectedHashtags(initialCategories);
+
+        // Set preview image initially
+        setPreviewImage(response.data.profileImage || null);
       } catch (error) {
         console.error("Failed to fetch profile data", error);
       }
@@ -254,19 +263,61 @@ const ProfileEdit = () => {
 
       console.log("Sending data:", requestData);
 
+      // Update profile information
       await api.put("/users/me", requestData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
-      setProfileData({
-        ...profileData,
-        ...formData,
-        selfIntroductions: selectedHashtags.map(
-          (hashtag) => hashtagToId[hashtag]
-        ),
+      let newProfileImageUrl = profileData.profileImage;
+
+      // If an image is selected
+      if (selectedFile) {
+        const imageFormData = new FormData();
+        imageFormData.append("image", selectedFile);
+
+        console.log("Sending image:", selectedFile);
+
+        const imageUploadResponse = await api.post(
+          "/users/me/image",
+          imageFormData,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+
+        console.log("Image upload response:", imageUploadResponse.data);
+
+        // Get the image URL from the server response
+        newProfileImageUrl = `${
+          imageUploadResponse.data.profileImageUrl
+        }?timestamp=${new Date().getTime()}`;
+        setPreviewImage(newProfileImageUrl);
+
+        console.log("Image upload successful");
+      } else {
+        console.log("No image selected");
+      }
+
+      // Fetch updated profile data
+      const updatedProfileData = await api.get("/users/me", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+
+      console.log("Updated profile data:", updatedProfileData.data);
+
+      setProfileData({
+        ...updatedProfileData.data,
+        profileImage: newProfileImageUrl, // Reflect updated profile image URL
+      });
+
+      setSelectedFile(null);
       setIsEditing(false);
     } catch (error) {
       console.error(
@@ -288,6 +339,13 @@ const ProfileEdit = () => {
     });
   };
 
+  const handleFileChange = (e) => {
+    if (e.target.files[0]) {
+      setSelectedFile(e.target.files[0]);
+      setPreviewImage(URL.createObjectURL(e.target.files[0]));
+    }
+  };
+
   if (!profileData) {
     return <div>Loading...</div>;
   }
@@ -297,10 +355,32 @@ const ProfileEdit = () => {
       <ContentWrapper>
         <LeftSection>
           <div className="profileImage">
-            <ProfileImage src="images/arrow-right.svg" alt="Profile" />
+            <ProfileImage
+              src={
+                previewImage ||
+                profileData.profileImageUrl ||
+                "images/arrow-right.svg"
+              }
+              alt="Profile"
+            />
           </div>
-          <ImgEdit>프로필 이미지 수정</ImgEdit>
+          {isEditing && (
+            <>
+              <ImgEdit
+                onClick={() => document.getElementById("fileInput").click()}
+              >
+                프로필 이미지 수정
+              </ImgEdit>
+              <FileInput
+                id="fileInput"
+                type="file"
+                accept="image/*"
+                onChange={handleFileChange}
+              />
+            </>
+          )}
         </LeftSection>
+
         <RightSection>
           <div className="infoTitle">닉네임</div>
           <div className="nickname">
