@@ -7,6 +7,7 @@ import Profile from "./components/mypage/index.js";
 import CultureDetail from "./components/culturedetail/index.js";
 import CultureInfo from "./components/culturedetail/CultureInfo.js";
 import CultureMeet from "./components/culturedetail/CultureMeet.js";
+import Club from "./components/club/index.js";
 
 const App = () => {
   return (
@@ -18,6 +19,7 @@ const App = () => {
             <Route path="profileShow" element={<ProfileShow />} />
             <Route path="profileEdit" element={<ProfileEdit />} />
           </Route>
+          <Route path="/club" element={<Club />}></Route>
           <Route path="/culturedetail" element={<CultureDetail />}>
             <Route path="info" element={<CultureInfo />} />
             <Route path="meet" element={<CultureMeet />} />

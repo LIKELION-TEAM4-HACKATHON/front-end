@@ -176,7 +176,7 @@ const Header = () => {
               <StyledLink to="/">나의 모임 찾기</StyledLink>
             </div>
             <StyledLink to="/">요즘 뭐햐</StyledLink>
-            <StyledLink to="/">모임 찾기</StyledLink>
+            <StyledLink to="/club">모임 찾기</StyledLink>
             <StyledLink to="/">후기</StyledLink>
           </div>
         </div>
