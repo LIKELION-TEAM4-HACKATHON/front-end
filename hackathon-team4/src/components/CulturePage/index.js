@@ -3,6 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import CategoryMenu from "./CategoryMenu";
 import CultureList from "./CultureList";
+
 const api = axios.create({
   baseURL: "/api",
 });
@@ -11,43 +12,49 @@ class CulturePage extends Component {
   constructor() {
     super();
     this.state = {
-      cultures: [],
-      category: "",
+      allCultures: [], // 전체 문화 데이터를 저장할 상태
+      cultures: [], // 필터링된 문화 데이터를 저장할 상태
+      category: "전체", // 기본 카테고리는 전체로 설정
       pageNum: 1,
     };
   }
 
   componentDidMount() {
-    this.fetchCultures();
+    this.fetchAllCultures();
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (
-      prevState.category !== this.state.category ||
-      prevState.pageNum !== this.state.pageNum
-    ) {
-      this.fetchCultures();
-    }
-  }
-
-  fetchCultures = async () => {
-    const { category, pageNum } = this.state;
+  fetchAllCultures = async () => {
     try {
       const response = await api.get("/cultures", {
         params: {
-          category,
-          page: pageNum - 1,
+          category: "",
+          page: 0,
         },
       });
-      console.log(response.data.content);
-      this.setState({ cultures: response.data.content });
+      this.setState({ allCultures: response.data.content }, () => {
+        this.filterCultures();
+      });
     } catch (error) {
       console.error("Failed to fetch cultures", error);
     }
   };
 
+  filterCultures = () => {
+    const { allCultures, category } = this.state;
+    if (category === "전체") {
+      this.setState({ cultures: allCultures });
+    } else {
+      const filteredCultures = allCultures.filter(
+        (culture) => culture.cultureCategoryName === category
+      );
+      this.setState({ cultures: filteredCultures });
+    }
+  };
+
   handleCategoryChange = (category) => {
-    this.setState({ category });
+    this.setState({ category, pageNum: 1 }, () => {
+      this.filterCultures();
+    });
   };
 
   handlePageChange = (direction) => {
@@ -62,14 +69,17 @@ class CulturePage extends Component {
     return (
       <CulturePageContainer>
         <div className="culture-top">
-          <div className="culture-top-title">요즘 뭐햐</div>
+          <div className="culture-top-title">요즘 뭐해?</div>
           <div className="culture-top-subtitle">
             항상 새롭고 신기한 추억을 쌓을 수 있는 문화 컨텐츠를 볼 수 있습니다.
           </div>
         </div>
         <CategorySection>
           <div className="culture-category-box">
-            <CategoryMenu onCategoryChange={this.handleCategoryChange} />
+            <CategoryMenu
+              onCategoryChange={this.handleCategoryChange}
+              selectedCategory={this.state.category}
+            />
           </div>
           <div className="culture-list-box">
             <CultureList cultures={cultures} />

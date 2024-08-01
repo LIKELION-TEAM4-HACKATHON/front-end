@@ -18,7 +18,8 @@ const Menu = styled.ul`
     font-family: "KoddiUDOnGothic-Bold";
     font-size: 21px;
 
-    &:hover {
+    &:hover,
+    &.active {
       background-color: #cb3939;
       color: #fff;
     }
