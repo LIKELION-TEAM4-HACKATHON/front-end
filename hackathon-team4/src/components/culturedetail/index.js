@@ -1,41 +1,75 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios";
 import CultureInfo from "./CultureInfo";
 import CultureMeet from "./CultureMeet";
 import CultureReview from "./CultureReview";
+import { useParams } from "react-router-dom";
+// 모달 컴포넌트 임폴트
 
-const CultureDetail = () => {
+const api = axios.create({
+  baseURL: "/api",
+});
+
+const CultureDetail = ({}) => {
+  const { cultureId } = useParams();
   const [activeTab, setActiveTab] = useState("info");
+  const [cultureData, setCultureData] = useState(null);
+  // const [isModalOpen, setIsModalOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchCultureDetail = async () => {
+      try {
+        const response = await api.get("/cultures/" + cultureId);
+        console.log("Response:", response.data);
+        setCultureData(response.data);
+      } catch (error) {
+        console.error("Failed to fetch culture detail", error);
+      }
+    };
+    fetchCultureDetail();
+  }, [cultureId]);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
+
   const handleCreateMeetClick = () => {
-    // 모임 만들기 URL
+    // setIsModalOpen(true); // 모달을 열도록 상태 변경
   };
-  const handleCreateReviewClick = () => {
-    // 리뷰 작성 URL
-  };
+
+  // const handleCloseModal = () => {
+  //   setIsModalOpen(false); // 모달을 닫도록 상태 변경
+  // };
+
+  const handleCreateReviewClick = () => {};
+
+  if (!cultureData) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <CultureDetailSection>
       <div className="container">
         <div className="culture-top-container">
           <div className="culture-top-left">
-            <div className="culture-title">{"탕후루 만들기"}</div>
+            <div className="culture-title">{cultureData.name}</div>
             <img
               className="culture-image"
-              src="images/popular-doing.png"
+              src={cultureData.cultureImageUrl}
               alt="문화 이미지"
             />
-            <img />
           </div>
 
           <div className="culture-top-right">
-            <div className="location">{"동작 마포 잠실"}</div>
-            <div className="challenge">{"홈메이드 탕후루 도전하기!"}</div>
-            <div className="member">추천인원: {"4~5"}명</div>
-            <span className="likes-num">관심 수 {"10"}</span>
+            <div className="location">{cultureData.regionName}</div>
+            <div className="challenge">{cultureData.summary}</div>
+            <div className="member">
+              추천인원: {cultureData.recommendedMember}
+            </div>
+            <span className="likes-num">
+              관심 수 {cultureData.interestCount}
+            </span>
             <button className="likes-btn">관심</button>
           </div>
         </div>
@@ -75,22 +109,23 @@ const CultureDetail = () => {
         </div>
 
         <div className="culture-detail-bottom">
-          {activeTab === "info" && <CultureInfo />}
-          {activeTab === "meet" && <CultureMeet />}
-          {activeTab === "review" && <CultureReview />}
+          {activeTab === "info" && <CultureInfo cultureData={cultureData} />}
+          {activeTab === "meet" && <CultureMeet clubs={cultureData.clubs} />}
+          {activeTab === "review" && (
+            <CultureReview reviews={cultureData.reviews} />
+          )}
         </div>
       </div>
+      {/* {isModalOpen && <CreateMeetModal onClose={handleCloseModal} />} */}
     </CultureDetailSection>
   );
 };
 
-//스타일
 const CultureDetailSection = styled.section`
   width: 100%;
   height: auto;
   padding: 20px;
 
-  //문화 상세 페이지 top부분
   .container {
     margin: 0;
     background-color: #fff;

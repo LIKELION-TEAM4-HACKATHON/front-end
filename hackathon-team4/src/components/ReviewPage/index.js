@@ -1,287 +1,303 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: "/api",
+});
 
 const ReviewPage = () => {
-  // API 연동 전 리뷰
-  const reviews = [
-    {
-      id: 1,
-      nickname: "박신우",
-      title: "탕후루 만들기 후기",
-      type: "탕후루 만들기",
-      likes: 10,
-      comments: 3,
-      date: "2024.07.02",
-      profileImageUrl: "",
-      reviewImageUrl: "images/popular-doing.png",
-    },
-    {
-      id: 2,
-      nickname: "박신우",
-      title: "탕후루 만들기 후기",
-      type: "탕후루 만들기",
-      likes: 10,
-      comments: 3,
-      date: "2024.07.02",
-      profileImageUrl: "",
-      reviewImageUrl: "images/popular-doing.png",
-    },
-    {
-      id: 3,
-      nickname: "박신우",
-      title: "탕후루 만들기 후기",
-      type: "탕후루 만들기",
-      likes: 10,
-      comments: 3,
-      date: "2024.07.02",
-      profileImageUrl: "",
-      reviewImageUrl: "images/popular-doing.png",
-    },
-    {
-      id: 4,
-      nickname: "박신우",
-      title: "탕후루 만들기 후기",
-      type: "탕후루 만들기",
-      likes: 10,
-      comments: 3,
-      date: "2024.07.02",
-      profileImageUrl: "",
-      reviewImageUrl: "images/popular-doing.png",
-    },
-  ];
+  const [reviewDetail, setReviewDetail] = useState(null);
+  useEffect(() => {
+    const fetchReviewDetail = async () => {
+      try {
+        const response = await api.get("/reviews/{reviewId}");
 
-  const [searchTerm, setSearchTerm] = useState("");
+        console.log("Review detail fetched:", response.data);
 
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
-  };
+        setReviewDetail(response.data);
+      } catch (error) {
+        console.error("Failed to fetch review detail", error);
+      }
+    };
 
-  const filteredReviews = reviews.filter((review) =>
-    review.title.includes(searchTerm)
-  );
+    fetchReviewDetail();
+  }, []);
+
+  if (!reviewDetail) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <ReviewsPage>
-      <SearchContainer>
-        <input
-          type="text"
-          placeholder="후기를 검색해보세요!"
-          value={searchTerm}
-          onChange={handleSearchChange}
-        />
-      </SearchContainer>
-
-      <ReviewsContainer>
-        {filteredReviews.map((review) => (
-          <ReviewListItem key={review.id}>
-            <div className="review-list-item-box">
-              <div className="review-list-profile">
-                <div
-                  className="review-list-profile-image"
-                  style={{ backgroundImage: `url(${review.profileImageUrl})` }}
-                ></div>
-                <div className="review-list-profile-nickname">
-                  {review.nickname}
-                </div>
+    <ReviewDetail>
+      <div className="review-detail-feed-box">
+        <div className="review-detail-item-box">
+          <div className="review-detail-item-top">
+            <div className="review-detail-title">{reviewDetail.title}</div>
+            <div className="review-detail-type-nickname">
+              <div className="review-detail-type">
+                {reviewDetail.culture.name}
               </div>
-              <div className="review-list-content">
-                <div className="review-list-title">{review.title}</div>
-                <div className="review-list-type">{review.type}</div>
-                <div className="review-list-counts">
-                  <div className="review-list-likes">좋아요 {review.likes}</div>
-                  <div className="review-list-comments">
-                    댓글 {review.comments}
-                  </div>
-                </div>
+              <div className="review-detail-nickname">
+                {reviewDetail.reivewer.username} 님
               </div>
-              <div className="review-list-date">
-                <div>작성일</div>
-                <div>{review.date}</div>
-              </div>
-              <div
-                className="review-list-image"
-                style={{ backgroundImage: `url(${review.reviewImageUrl})` }}
-              ></div>
             </div>
-          </ReviewListItem>
-        ))}
-      </ReviewsContainer>
+          </div>
+          <div className="review-detail-item-middle">
+            <img
+              className="review-detail-item-image"
+              src="reviewDetail.reviewImageUrl1"
+              alt={"리뷰이미지"}
+            />
+          </div>
+          <div className="review-detail-item-bottom">
+            <div className="review-detail-date">
+              작성일 {new Date(reviewDetail.createdDate).toLocaleDateString()}
+            </div>
+            <div className="review-detail-likes-comments">
+              <div className="review-detail-likes">
+                좋아요 {reviewDetail.likeCount}
+              </div>
+              <div className="review-detail-comments">
+                댓글 {reviewDetail.comments.length}
+              </div>
+            </div>
+          </div>
+        </div>
 
-      <Pagination>
-        <img src="images/back-button.png" alt="back-button" />
-        <div className="pageNumBox">1</div>
-        <img src="images/next-button.png" alt="next-button" />
-      </Pagination>
-    </ReviewsPage>
+        <div className="review-detail-comment-box">
+          <div className="review-comment-top">
+            <button className="review-comment-like-btn">좋아요 버튼</button>
+          </div>
+
+          <div className="review-comment-middle">
+            {reviewDetail.comments.map((comment) => (
+              <div
+                key={comment.commentId}
+                className="review-comment-middle-box"
+              >
+                <img
+                  className="review-comment-profile-image"
+                  src={comment.commenter.profileImage}
+                  alt="프로필 이미지"
+                />
+                <div className="review-comment-profile-nickname">
+                  {comment.commenter.username}
+                </div>
+                <div className="review-comment">{comment.content}</div>
+              </div>
+            ))}
+          </div>
+          <div className="review-comment-bottom">
+            <textarea
+              className="review-comment-write-form"
+              placeholder="댓글 작성 요망"
+            ></textarea>
+            <button className="review-comment-write-upload">댓글 게시</button>
+          </div>
+        </div>
+      </div>
+    </ReviewDetail>
   );
 };
 
-const ReviewsPage = styled.div`
+const ReviewDetail = styled.div`
   width: 100%;
   background: #fceeec;
   padding: 20px;
   font-family: "KoddiUDOnGothic-Regular";
-`;
 
-const SearchContainer = styled.div`
-  margin-bottom: 20px;
-  text-align: center;
-
-  input {
-    padding: 10px 0px 10px 20px;
-    width: 738px;
-    height: 43px;
-    border: 0px solid #ccc;
-
-    font-size: 22.929px;
-    border-radius: 8px;
-    background: #fff;
-    font-weight: 400;
-    line-height: normal;
-    box-shadow: 0px 2px 14.7px 0px rgba(0, 0, 0, 0.1) inset;
-    color: #7c7c7c;
-  }
-`;
-
-const ReviewsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const Pagination = styled.div`
-  padding-bottom: 36px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  img {
-    width: 34.59px;
-    height: 34.59px;
-  }
-
-  .pageNumBox {
-    width: 47px;
-    height: 47px;
-    margin: 0 36px;
-    border-radius: 4px;
-    background: #fff;
-    color: #7c7c7c;
-    text-align: center;
-    font-family: GmarketSans;
-    font-size: 38px;
-    font-weight: 500;
-    line-height: 1.4;
-  }
-`;
-
-const ReviewListItem = styled.div`
-  display: flex;
-  justify-content: center;
-  background-color: #fff;
-  border-radius: 15.314px;
-  box-shadow: 0 2px 10.796px 0px rgba(0, 0, 0, 0.25);
-  cursor: pointer;
-  margin-bottom: 20px;
-  width: 90%;
-
-  .review-list-item-box {
+  .review-detail-feed-box {
     display: flex;
-    align-items: center;
-    width: 1553px;
-    height: 183.204px;
-  }
-
-  .review-list-profile {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-right: 16px;
-    width: 457px;
-    height: 143.462px;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 20px;
   }
 
-  .review-list-profile-image {
-    width: 102px;
-    height: 98.872px;
-    border-radius: 50%;
-    background-color: #eee;
-    background-size: cover;
-    background-position: center;
+  .review-detail-item-box {
+    width: 1004.092px;
+    height: 989.055px;
+    background: #fff;
+    border-radius: 15px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    padding: 2px;
   }
 
-  .review-list-profile-nickname {
-    margin-top: 8px;
-    font-size: 17.506px;
-    color: #000;
-    text-align: center;
-    font-weight: 400;
-    line-height: normal;
-  }
-
-  .review-list-content {
-    flex: 1;
+  .review-detail-item-top {
+    padding: 15px 0px 0px 70px;
+    height: 180px;
     display: flex;
     flex-direction: column;
-    padding: 30px 100px;
+    align-items: right;
+    margin-bottom: 20px;
+    width: 800;
+
+    .review-detail-title {
+      font-size: 75.113px;
+      font-weight: 700;
+      color: #e02525;
+      margin-top: 20px;
+    }
+    .review-detail-type-nickname {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .review-detail-type {
+      color: #7c7c7c;
+      font-size: 36.318px;
+      margin-bottom: 10px;
+    }
+
+    .review-detail-nickname {
+      color: #000;
+      text-align: center;
+      font-size: 36.506px;
+      margin-left: 40px;
+    }
+  }
+
+  .review-detail-item-middle {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+
+    .review-detail-item-image {
+      width: 862px;
+      height: 678px;
+      border-radius: 15px;
+    }
+  }
+
+  .review-detail-item-bottom {
+    display: flex;
+    justify-content: space-between;
+    font-size: 16px;
+    color: #7c7c7c;
+    padding: 15px 70px 0px 70px;
+    margin-bottom: 20px;
+    width: 800;
+
+    .review-detail-date {
+      font-size: 24px;
+      color: #7c7c7c;
+    }
+    .review-detail-likes-comments {
+      display: flex;
+      gap: 10px;
+
+      .review-detail-likes {
+        font-size: 24px;
+        color: #e02525;
+        background-color: #df2525;
+        border-radius: 4px;
+        color: #fff;
+      }
+
+      .review-detail-comments {
+        font-size: 24px;
+        border-width: 0.766px;
+        background-color: #fff;
+        border-radius: 4px;
+        border-color: #df2525;
+        border-style: solid;
+        color: #df2525;
+      }
+    }
+  }
+
+  //여기부터 댓글 스타일 부분
+
+  .review-detail-comment-box {
+    width: 1004.092px;
+    background: #fceeec;
+    padding: 20px;
+    border-radius: 15px;
+  }
+
+  .review-comment-top {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+
+    .review-comment-like-btn {
+      padding: 10px 20px;
+      background-color: #e02525;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 24.537px;
+      cursor: pointer;
+    }
+  }
+
+  //댓글 보기 창
+  .review-comment-middle {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+
+  .review-comment-middle-box {
+    display: flex;
+    align-items: center;
     gap: 10px;
+
+    .review-comment-profile-image {
+      width: 61px;
+      height: 59.129px;
+      border-radius: 50%;
+    }
+
+    .review-comment-profile-nickname {
+      font-weight: bold;
+      margin-right: 10px;
+      font-size: 27.331px;
+    }
+  }
+  .review-comment {
+    display: block;
+    font-size: 24px;
+    background: white;
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 910px;
+    height: 87px;
+    padding: 20px 40px 20px 40px;
   }
 
-  .review-list-title {
-    color: red;
-    font-size: 35.159px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-  }
-
-  .review-list-type {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 8px;
-  }
-
-  .review-list-counts {
+  //댓글 작성하기
+  .review-comment-bottom {
     display: flex;
     gap: 10px;
-  }
 
-  .review-list-likes {
-    padding: 2px 5px 2px 10px;
-    background-color: #df2525;
-    border-radius: 4px;
-    font-size: 12px;
-    color: #fff;
-  }
+    .review-comment-write-form {
+      flex: 1;
+      padding: 20px;
+      border-radius: 20px;
+      border: 1px solid #ccc;
+      resize: none;
+      height: 50px;
+      font-size: 24px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
 
-  .review-list-comments {
-    padding: 2px 10px 2px 5px;
-    background-color: #fff;
-    border-radius: 4px;
-    border-width: 0.766px;
-    border-style: solid;
-    border-color: #df2525;
-    font-size: 12px;
-    color: #df2525;
-  }
-
-  .review-list-date {
-    display: flex;
-    flex-direction: column;
-    text-align: right;
-    font-size: 12px;
-    color: #999;
-    gap: 0px;
-  }
-
-  .review-list-image {
-    width: 203.607px;
-    height: 160.203px;
-    border-radius: 8px;
-    background-size: cover;
-    background-position: center;
-    flex-direction: column;
+    .review-comment-write-upload {
+      padding: 20px;
+      background-color: #e02525;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 24px;
+    }
   }
 `;
-
 export default ReviewPage;

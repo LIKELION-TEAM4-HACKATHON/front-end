@@ -9,10 +9,14 @@ const List = styled.div`
 `;
 
 const CultureList = ({ cultures }) => {
+  if (!cultures || cultures.length === 0) {
+    return <div>이용 가능한 문화가 없습니다</div>;
+  }
+
   return (
     <List>
-      {cultures.map((culture) => (
-        <CultureCard key={culture.cultureId} culture={culture} />
+      {cultures.map((cultures) => (
+        <CultureCard key={cultures.cultureId} cultures={cultures} />
       ))}
     </List>
   );

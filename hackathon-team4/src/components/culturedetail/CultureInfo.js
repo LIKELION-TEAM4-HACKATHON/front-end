@@ -8,11 +8,12 @@ const InfoContainer = styled.div`
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
-const CultureInfo = () => {
+const CultureInfo = ({ cultureData }) => {
   return (
     <InfoContainer>
-      <h3>사용 설명서???</h3>
-      <p>여기에 문화에 대한 상세 설명이 들어갑니다.</p>
+      <h2>{cultureData.name}</h2>
+      <p>{cultureData.summary}</p>
+      <p>{cultureData.content}</p>
     </InfoContainer>
   );
 };

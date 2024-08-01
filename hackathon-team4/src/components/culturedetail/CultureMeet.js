@@ -1,74 +1,17 @@
 import React from "react";
 import styled from "styled-components";
 
-//모임 리스트 컴포넌트
-
-const CultureMeet = () => {
-  const clubs = [
-    {
-      clubId: 1,
-      title: "퍼스널 컬러 진단 같이 가요",
-      regionName: "동작 관악 금천",
-      cultureName: "퍼스널컬러",
-      leaderProfileImageUrl: "http://example.com/leaderProfileImage.jpg",
-      meetingDate: "2024-07-25T18:00:00Z",
-      createdDate: "2024-07-25T18:00:00Z",
-      genderRestriction: "NONE",
-      ageRestriction: "5학년",
-      currentParticipant: 5,
-      maxParticipant: 10,
-    },
-    {
-      clubId: 2,
-      title: "퍼스널 컬러 진단 같이 가요",
-      regionName: "동작 관악 금천",
-      cultureName: "퍼스널컬러",
-      leaderProfileImageUrl: "http://example.com/leaderProfileImage.jpg",
-      meetingDate: "2024-07-25T18:00:00Z",
-      createdDate: "2024-07-25T18:00:00Z",
-      genderRestriction: "NONE",
-      ageRestriction: "5학년",
-      currentParticipant: 5,
-      maxParticipant: 10,
-    },
-    {
-      clubId: 3,
-      title: "퍼스널 컬러 진단 같이 가요",
-      regionName: "동작 관악 금천",
-      cultureName: "퍼스널컬러",
-      leaderProfileImageUrl: "http://example.com/leaderProfileImage.jpg",
-      meetingDate: "2024-07-25T18:00:00Z",
-      createdDate: "2024-07-25T18:00:00Z",
-      genderRestriction: "NONE",
-      ageRestriction: "5학년",
-      currentParticipant: 5,
-      maxParticipant: 10,
-    },
-    {
-      clubId: 4,
-      title: "퍼스널 컬러 진단 같이 가요",
-      regionName: "동작 관악 금천",
-      cultureName: "퍼스널컬러",
-      leaderProfileImageUrl: "http://example.com/leaderProfileImage.jpg",
-      meetingDate: "2024-07-25T18:00:00Z",
-      createdDate: "2024-07-25T18:00:00Z",
-      genderRestriction: "NONE",
-      ageRestriction: "5학년",
-      currentParticipant: 5,
-      maxParticipant: 10,
-    },
-  ];
-
+const CultureMeet = ({ clubs }) => {
   return (
     <MeetContainer>
       {clubs.map((club) => (
-        <MeetCard key={club.id}>
+        <MeetCard key={club.clubId}>
           <div className="top">
             <img
               className="profile-img"
               src={club.leaderProfileImageUrl}
               alt="프로필 이미지"
-            ></img>
+            />
             <div className="meet-name">{club.cultureName} 모임</div>
             <div className="location">{club.regionName}</div>
           </div>
@@ -83,7 +26,7 @@ const CultureMeet = () => {
           </button>
           <div className="tag-container">
             <p>
-              #{club.genderRestriction} #{club.ageRestriction}{" "}
+              #{club.genderRestriction} #{club.ageRestriction}
             </p>
             <p>
               {club.currentParticipant}/{club.maxParticipant}

@@ -1,29 +1,74 @@
 import React, { useState } from "react";
 import styled from "styled-components";
+import axios from "axios";
 
 const ReviewWrite = () => {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+  const [images, setImages] = useState([]);
+
+  const handleImageChange = (e) => {
+    setImages([...images, ...e.target.files]);
+  };
+
+  const handleSubmit = async () => {
+    const formData = new FormData();
+    formData.append("info", JSON.stringify({ title, content }));
+    images.forEach((image, index) => {
+      formData.append(`reviewImage${index + 1}`, image);
+    });
+
+    try {
+      const response = await axios.post(
+        "/api/reviews/culture/{cultureId}",
+        formData,
+        {
+          headers: {
+            Authorization:
+              "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MkB0ZXN0Lm",
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("Response:", response.data);
+    } catch (error) {
+      console.error("Failed to submit review", error);
+    }
+  };
+
   return (
     <ReviewWriteContainer>
       <div className="review-write-box">
-        <button className="review-write-submit-btn">후기 저장</button>
         <input
           type="text"
           className="review-write-title"
           placeholder="후기의 제목을 작성해주세요!"
-        ></input>
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+        />
         <div className="review-write-type">{"탕후루 만들기"}</div>
         <div className="review-write-image-upload-box">
           <img
             className="review-image-upload-logo"
             src="images/Vector.png"
             alt="사진 업로드 로고"
-          ></img>
-          <button className="review-write-image-upload-btn">사진 추가</button>
+          />
+          <input
+            type="file"
+            multiple
+            className="review-write-image-upload-input"
+            onChange={handleImageChange}
+          />
         </div>
         <textarea
           className="review-write-form-box"
           placeholder="후기를 작성해주세요!"
-        ></textarea>
+          value={content}
+          onChange={(e) => setContent(e.target.value)}
+        />
+        <button className="review-write-submit-btn" onClick={handleSubmit}>
+          후기 저장
+        </button>
       </div>
     </ReviewWriteContainer>
   );
@@ -61,6 +106,7 @@ const ReviewWriteContainer = styled.div`
     font-weight: 400;
     margin-bottom: 30px;
   }
+
   .review-write-title {
     width: 100%;
     height: 82px;
@@ -73,6 +119,7 @@ const ReviewWriteContainer = styled.div`
     text-align: center;
     font-size: 36.318px;
   }
+
   .review-write-type {
     width: 100%;
     height: 45px;
@@ -85,6 +132,7 @@ const ReviewWriteContainer = styled.div`
     margin-top: 20px;
     font-family: "GmarketSans";
   }
+
   .review-write-image-upload-box {
     width: 957px;
     height: 384px;
@@ -94,24 +142,23 @@ const ReviewWriteContainer = styled.div`
     align-items: center;
     flex-direction: column;
     margin-top: 30px;
+    position: relative;
   }
+
   .review-image-upload-logo {
     width: 163px;
     height: 122px;
     margin-bottom: 20px;
   }
-  .review-write-image-upload-btn {
-    width: 164px;
-    height: 49px;
-    border-radius: 6.529px;
-    border: none;
-    background: linear-gradient(90deg, #e02525 0%, #7a1414 100%);
-    color: #fff;
-    text-align: center;
-    text-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    font-family: "GmarketSans";
-    font-size: 22.57px;
+
+  .review-write-image-upload-input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
   }
+
   .review-write-form-box {
     width: 100%;
     height: 339px;

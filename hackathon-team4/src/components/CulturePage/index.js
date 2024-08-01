@@ -1,75 +1,63 @@
 import React, { Component } from "react";
 import styled from "styled-components";
+import axios from "axios";
 import CategoryMenu from "./CategoryMenu";
 import CultureList from "./CultureList";
+const api = axios.create({
+  baseURL: "/api",
+});
 
 class CulturePage extends Component {
   constructor() {
     super();
     this.state = {
-      cultures: [
-        {
-          cultureId: 1,
-          name: "인생네컷 찍기",
-          summary: "추억을 남기는 MZ의 문화",
-          cultureImageUrl: "https://via.placeholder.com/150",
-          cultureCategoryName: "야외활동",
-          regionName: "동작 관악 금천",
-          interestCount: 3,
-          clubCount: 6,
-        },
-        {
-          cultureId: 2,
-          name: "퍼스널컬러",
-          summary: "나의 퍼스널 컬러를 알아보아요",
-          cultureImageUrl: "https://via.placeholder.com/150",
-          cultureCategoryName: "미술과 예술",
-          regionName: "동작 관악 금천",
-          interestCount: 3,
-          clubCount: 6,
-        },
-        {
-          cultureId: 3,
-          name: "퍼스널컬러",
-          summary: "나의 퍼스널 컬러를 알아보아요",
-          cultureImageUrl: "https://via.placeholder.com/150",
-          cultureCategoryName: "미술과 예술",
-          regionName: "동작 관악 금천",
-          interestCount: 3,
-          clubCount: 6,
-        },
-        {
-          cultureId: 4,
-          name: "퍼스널컬러",
-          summary: "나의 퍼스널 컬러를 알아보아요",
-          cultureImageUrl: "https://via.placeholder.com/150",
-          cultureCategoryName: "미술과 예술",
-          regionName: "동작 관악 금천",
-          interestCount: 3,
-          clubCount: 6,
-        },
-        {
-          cultureId: 5,
-          name: "퍼스널컬러",
-          summary: "나의 퍼스널 컬러를 알아보아요",
-          cultureImageUrl: "https://via.placeholder.com/150",
-          cultureCategoryName: "미술과 예술",
-          regionName: "동작 관악 금천",
-          interestCount: 3,
-          clubCount: 6,
-        },
-      ],
+      cultures: [],
       category: "",
+      pageNum: 1,
     };
   }
 
+  componentDidMount() {
+    this.fetchCultures();
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (
+      prevState.category !== this.state.category ||
+      prevState.pageNum !== this.state.pageNum
+    ) {
+      this.fetchCultures();
+    }
+  }
+
+  fetchCultures = async () => {
+    const { category, pageNum } = this.state;
+    try {
+      const response = await api.get("/cultures", {
+        params: {
+          category,
+          page: pageNum - 1,
+        },
+      });
+      console.log(response.data.content);
+      this.setState({ cultures: response.data.content });
+    } catch (error) {
+      console.error("Failed to fetch cultures", error);
+    }
+  };
+
   handleCategoryChange = (category) => {
     this.setState({ category });
-    // Fetch or filter data based on the selected category
+  };
+
+  handlePageChange = (direction) => {
+    this.setState((prevState) => ({
+      pageNum: prevState.pageNum + direction,
+    }));
   };
 
   render() {
-    const { cultures } = this.state;
+    const { cultures, pageNum } = this.state;
 
     return (
       <CulturePageContainer>
@@ -88,9 +76,17 @@ class CulturePage extends Component {
           </div>
         </CategorySection>
         <div className="page">
-          <img src="images/back-button.png" alt="back-button" />
-          <div className="pageNumBox">1</div>
-          <img src="images/next-button.png" alt="next-button" />
+          <img
+            src="images/back-button.png"
+            alt="back-button"
+            onClick={() => this.handlePageChange(-1)}
+          />
+          <div className="pageNumBox">{pageNum}</div>
+          <img
+            src="images/next-button.png"
+            alt="next-button"
+            onClick={() => this.handlePageChange(1)}
+          />
         </div>
       </CulturePageContainer>
     );
@@ -125,6 +121,7 @@ const CulturePageContainer = styled.div`
     img {
       width: 34.59px;
       height: 34.59px;
+      cursor: pointer;
     }
   }
 
@@ -159,4 +156,5 @@ const CategorySection = styled.div`
     padding: 0px 100px;
   }
 `;
+
 export default CulturePage;

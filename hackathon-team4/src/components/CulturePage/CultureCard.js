@@ -1,18 +1,24 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
-const CultureCard = ({ culture }) => {
+const CultureCard = ({ cultures }) => {
   return (
-    <Card>
-      <img src={culture.cultureImageUrl} alt={culture.name} />
-      <h3 className="title">{culture.name}</h3>
-      <p className="summary">{culture.summary}</p>
-      <p className="region">{culture.regionName}</p>
-      <div className="culture-card-footer">
-        <span className="likes">관심 {culture.interestCount}</span>
-        <span className="chat">모임 {culture.clubCount}</span>
-      </div>
-    </Card>
+    <Link
+      to={`/cultures/${cultures.cultureId}`}
+      style={{ textDecoration: "none", color: "inherit" }}
+    >
+      <Card>
+        <img src={cultures.cultureImageUrl} alt={cultures.name} />
+        <h3 className="title">{cultures.name}</h3>
+        <p className="summary">{cultures.summary}</p>
+        <p className="region">{cultures.regionName}</p>
+        <div className="culture-card-footer">
+          <span className="likes">관심 {cultures.interestCount}</span>
+          <span className="chat">모임 {cultures.clubCount}</span>
+        </div>
+      </Card>
+    </Link>
   );
 };
 
@@ -86,4 +92,5 @@ const Card = styled.div`
     }
   }
 `;
+
 export default CultureCard;
