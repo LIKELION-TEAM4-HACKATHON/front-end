@@ -144,13 +144,13 @@ const JoinModal = ({
         switch (hashtag) {
           case "나 찾기":
             return 1;
-          case "자기 계발":
+          case "예술과 교양":
             return 2;
-          case "야외 활동":
+          case "야외활동":
             return 3;
-          case "힐링":
+          case "실내활동":
             return 4;
-          case "예술":
+          case "배움":
             return 5;
           default:
             return 0;
