@@ -1,20 +1,17 @@
 import { useState } from "react";
-import axios from "axios";
 import JoinInput1 from "./JoinInput1";
 import JoinInput2 from "./JoinInput2";
 import JoinInput3 from "./JoinInput3";
 import JoinInput4 from "./JoinInput4";
 import JoinComplete from "./JoinComplete";
 import styled from "styled-components";
-
-const api = axios.create({
-  baseURL: "/api",
-});
+import api from "../../api";
 
 const NextButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
 `;
+
 const NextButton = styled.button`
   width: 228px;
   height: 41px;
@@ -38,10 +35,12 @@ const NextButton = styled.button`
     cursor: default;
   }
 `;
+
 const PrevButtonContainer = styled.div`
   display: flex;
   justify-content: flex-start;
 `;
+
 const PrevButton = styled.button`
   background: none;
   border: none;
@@ -87,11 +86,33 @@ const JoinModal = ({
   const [isStep3Valid, setIsStep3Valid] = useState(false);
   const [isSignupComplete, setIsSignupComplete] = useState(false);
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (step === 1 && isStep1Valid) {
-      setStep(2);
+      try {
+        const response = await api.get(`/auth/email?email=${email}`);
+        if (response.data.message === "이메일 중복 점검 성공") {
+          setStep(2);
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 400) {
+          alert("이미 존재하는 이메일입니다. 다른 이메일을 입력해 주세요.");
+        } else {
+          console.error("이메일 중복 검증 오류:", error);
+        }
+      }
     } else if (step === 2 && isStep2Valid) {
-      setStep(3);
+      try {
+        const response = await api.get(`/auth/username?username=${nickname}`);
+        if (response.data.message === "닉네임 중복 점검 성공") {
+          setStep(3);
+        }
+      } catch (error) {
+        if (error.response && error.response.status === 400) {
+          alert("이미 사용중인 닉네임입니다. 다른 닉네임을 입력해 주세요.");
+        } else {
+          console.error("닉네임 중복 검증 오류:", error);
+        }
+      }
     } else if (step === 3 && isStep3Valid) {
       setStep(4);
     } else if (step === 4) {
