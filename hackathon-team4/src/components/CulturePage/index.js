@@ -87,6 +87,11 @@ class CulturePage extends Component {
             <CultureList cultures={cultures} />
           </div>
         </CategorySection>
+        <div className="page">
+          <img src="images/back-button.png" alt="back-button" />
+          <div className="pageNumBox">1</div>
+          <img src="images/next-button.png" alt="next-button" />
+        </div>
       </CulturePageContainer>
     );
   }
@@ -110,6 +115,32 @@ const CulturePageContainer = styled.div`
     font-family: "KoddiUDOnGothic-Regular";
     font-size: 22.929px;
   }
+
+  .page {
+    padding-bottom: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 34.59px;
+      height: 34.59px;
+    }
+  }
+
+  .pageNumBox {
+    width: 47px;
+    height: 47px;
+    margin: 0 36px;
+    border-radius: 4px;
+    background: #fff;
+    color: #7c7c7c;
+    text-align: center;
+    font-family: GmarketSans;
+    font-size: 38px;
+    font-weight: 500;
+    line-height: 1.4;
+  }
 `;
 
 const CategorySection = styled.div`
@@ -128,5 +159,4 @@ const CategorySection = styled.div`
     padding: 0px 100px;
   }
 `;
-
 export default CulturePage;

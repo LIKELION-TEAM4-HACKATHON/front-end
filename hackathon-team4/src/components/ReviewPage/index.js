@@ -108,9 +108,9 @@ const ReviewPage = () => {
       </ReviewsContainer>
 
       <Pagination>
-        <button>&lt;</button>
-        <span>1</span>
-        <button>&gt;</button>
+        <img src="images/back-button.png" alt="back-button" />
+        <div className="pageNumBox">1</div>
+        <img src="images/next-button.png" alt="next-button" />
       </Pagination>
     </ReviewsPage>
   );
@@ -150,22 +150,28 @@ const ReviewsContainer = styled.div`
 `;
 
 const Pagination = styled.div`
+  padding-bottom: 36px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  margin-top: 20px;
+  justify-content: center;
 
-  button {
-    padding: 10px;
-    margin: 0 5px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    cursor: pointer;
-    border-radius: 4px;
+  img {
+    width: 34.59px;
+    height: 34.59px;
   }
 
-  span {
-    padding: 10px;
+  .pageNumBox {
+    width: 47px;
+    height: 47px;
+    margin: 0 36px;
+    border-radius: 4px;
+    background: #fff;
+    color: #7c7c7c;
+    text-align: center;
+    font-family: GmarketSans;
+    font-size: 38px;
+    font-weight: 500;
+    line-height: 1.4;
   }
 `;
 
