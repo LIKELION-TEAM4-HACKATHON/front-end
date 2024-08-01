@@ -9,9 +9,10 @@ import CultureInfo from "./components/culturedetail/CultureInfo.js";
 import CultureMeet from "./components/culturedetail/CultureMeet.js";
 import Club from "./components/club/index.js";
 import ClubDetail from "./components/club/ClubDetail.js";
-import ReviewPage from "./components/ReviewPage/index.js";
+import ReviewPage from "./components/ReviewPage/ReviewSimple.js";
 import ReviewWrite from "./components/ReviewPage/ReviewWrite.js";
 import CulturePage from "./components/CulturePage/index.js";
+import ReviewDetail from "./components/ReviewPage/index.js";
 
 const App = () => {
   return (
@@ -26,11 +27,12 @@ const App = () => {
           <Route path="/club" element={<Club />} />
           <Route path="/clubDetail" element={<ClubDetail />} />
           <Route path="/culture" element={<CulturePage />} />
-          <Route path="/culturedetail" element={<CultureDetail />}>
+          <Route path="/cultures/:cultureId" element={<CultureDetail />}>
             <Route path="info" element={<CultureInfo />} />
             <Route path="meet" element={<CultureMeet />} />
           </Route>
           <Route path="/review" element={<ReviewPage />} />
+          <Route path="/reviewdetail" element={<ReviewDetail />} />
           <Route path="/reviewWrite" element={<ReviewWrite />} />
         </Route>
       </Routes>
