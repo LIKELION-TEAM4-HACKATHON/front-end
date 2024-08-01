@@ -11,6 +11,7 @@ import Club from "./components/club/index.js";
 import ClubDetail from "./components/club/ClubDetail.js";
 import ReviewPage from "./components/ReviewPage/index.js";
 import ReviewWrite from "./components/ReviewPage/ReviewWrite.js";
+import CulturePage from "./components/CulturePage/index.js";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
           </Route>
           <Route path="/club" element={<Club />} />
           <Route path="/clubDetail" element={<ClubDetail />} />
+          <Route path="/culture" element={<CulturePage />} />
           <Route path="/culturedetail" element={<CultureDetail />}>
             <Route path="info" element={<CultureInfo />} />
             <Route path="meet" element={<CultureMeet />} />
