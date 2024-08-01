@@ -1,10 +1,6 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
-import axios from "axios";
-
-const api = axios.create({
-  baseURL: "/api",
-});
+import api from "../../api";
 
 const Btn = styled.button`
   width: 100%;
