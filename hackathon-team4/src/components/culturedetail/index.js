@@ -12,6 +12,7 @@ const CultureDetail = () => {
   const [activeTab, setActiveTab] = useState("info");
   const [cultureData, setCultureData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
 
   useEffect(() => {
     const fetchCultureDetail = async () => {
@@ -25,6 +26,11 @@ const CultureDetail = () => {
     };
     fetchCultureDetail();
   }, [cultureId]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    setIsUserLoggedIn(!!token);
+  }, []);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -92,12 +98,12 @@ const CultureDetail = () => {
               후기
             </div>
           </div>
-          {activeTab === "meet" && (
+          {activeTab === "meet" && isUserLoggedIn && (
             <CreateButton onClick={handleCreateMeetClick}>
               모임 만들기
             </CreateButton>
           )}
-          {activeTab === "review" && (
+          {activeTab === "review" && isUserLoggedIn && (
             <CreateButton onClick={handleCreateReviewClick}>
               후기 작성
             </CreateButton>
@@ -126,7 +132,6 @@ const CultureDetail = () => {
 const CultureDetailSection = styled.section`
   width: 100%;
   height: auto;
-  padding: 20px;
 
   .container {
     margin: 0;
@@ -145,37 +150,44 @@ const CultureDetailSection = styled.section`
     box-shadow: 2.522px 5.044px 17.905px 0px rgba(0, 0, 0, 0.14);
     font-family: KoddiUDOnGothic-Regular;
   }
+
   .culture-top-left {
     width: 420px;
   }
+
   .culture-top-right {
     padding-right: 30px;
     text-align: right;
     width: 500px;
   }
+
   .culture-title {
     font-size: 40px;
     font-weight: bold;
     color: #e02525;
     margin: 20px 40px;
   }
+
   .culture-image {
     width: 400.646px;
     height: 288.683px;
     border-radius: 15.519px;
     margin: 7px 20px;
   }
+
   .location {
     font-size: 20.407px;
     color: #7c7c7c;
     font-weight: 400;
   }
+
   .challenge {
     margin-top: 20px;
     color: #7c7c7c;
     font-size: 31.407px;
     font-weight: 400;
   }
+
   .member {
     margin-top: 70px;
     margin-bottom: 70px;
@@ -184,6 +196,7 @@ const CultureDetailSection = styled.section`
     font-size: 31.407px;
     font-weight: 400;
   }
+
   .likes-num {
     padding: 7px 16px;
     background-color: #e74c3c;
@@ -192,6 +205,7 @@ const CultureDetailSection = styled.section`
     border-radius: 10px;
     font-size: 27.711px;
   }
+
   .likes-btn {
     padding: 7px 20px;
     border: 2px solid #e74c3c;
@@ -207,51 +221,64 @@ const CultureDetailSection = styled.section`
       color: #fff;
     }
   }
+
   .container2 {
     background: #fceeec;
     margin: 0;
   }
+
   .tabContainer {
-    height: auto;
+    height: 80px;
+    padding-top: 6px;
     border-bottom: 3px solid #df2525;
-    margin-bottom: 20px;
     position: relative;
   }
 
   .tabBox {
     display: flex;
     justify-content: space-around;
+    align-items: center;
+    height: 100%;
     font-family: GmarketSans;
     font-size: 41.684px;
   }
+
   .tab {
     padding: 10px 20px;
     cursor: pointer;
   }
+
   .tab.active {
     font-weight: bold;
   }
+
   .culture-detail-bottom {
-    margin-top: 40px;
+    padding: 57px 0;
     display: flex;
     justify-content: center;
   }
 `;
+
 const CreateButton = styled.button`
   position: absolute;
   right: 10%;
   top: 50%;
   transform: translateY(130%);
   padding: 10px 20px;
+  padding-bottom: 5px;
   border: none;
   color: #fff;
   cursor: pointer;
-
   width: 164px;
   height: 49px;
   border-radius: 6.529px;
   background: linear-gradient(94deg, #e02525 -14.69%, #7a1414 99.86%);
   font-family: GmarketSans;
   font-size: 22.57px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 `;
+
 export default CultureDetail;
