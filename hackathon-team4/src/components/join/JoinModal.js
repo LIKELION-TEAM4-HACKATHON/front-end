@@ -142,7 +142,7 @@ const JoinModal = ({
       facebookId: facebook,
       selfIntroductions: selectedHashtags.map((hashtag) => {
         switch (hashtag) {
-          case "나 찾기":
+          case "'나' 찾기":
             return 1;
           case "예술과 교양":
             return 2;

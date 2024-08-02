@@ -18,26 +18,27 @@ const Menu = styled.ul`
     font-family: "KoddiUDOnGothic-Bold";
     font-size: 21px;
 
-    &:hover {
+    &:hover,
+    &.active {
       background-color: #cb3939;
       color: #fff;
     }
   }
 `;
 
-const categories = [
+const hashtags = [
   "전체",
-  "야외활동",
-  "미술과 예술",
   "'나' 찾기",
-  "힐링",
-  "자기 계발",
+  "예술과 교양",
+  "야외활동",
+  "실내활동",
+  "배움",
 ];
 
 const CategoryMenu = ({ onCategoryChange, selectedCategory }) => {
   return (
     <Menu>
-      {categories.map((category, index) => (
+      {hashtags.map((category, index) => (
         <li
           key={index}
           onClick={() => onCategoryChange(category)}
@@ -49,4 +50,5 @@ const CategoryMenu = ({ onCategoryChange, selectedCategory }) => {
     </Menu>
   );
 };
+
 export default CategoryMenu;

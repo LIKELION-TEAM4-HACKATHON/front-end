@@ -1,41 +1,77 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import api from "../../api";
 import CultureInfo from "./CultureInfo";
 import CultureMeet from "./CultureMeet";
 import CultureReview from "./CultureReview";
+import { useParams } from "react-router-dom";
+import Make from "../makeClub/Make";
 
 const CultureDetail = () => {
+  const { cultureId } = useParams();
   const [activeTab, setActiveTab] = useState("info");
+  const [cultureData, setCultureData] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const fetchCultureDetail = async () => {
+      try {
+        const response = await api.get("/cultures/" + cultureId);
+        console.log("Response:", response.data);
+        setCultureData(response.data);
+      } catch (error) {
+        console.error("Failed to fetch culture detail", error);
+      }
+    };
+    fetchCultureDetail();
+  }, [cultureId]);
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    setIsUserLoggedIn(!!token);
+  }, []);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
+
   const handleCreateMeetClick = () => {
-    // 모임 만들기 URL
+    setIsModalOpen(true);
   };
-  const handleCreateReviewClick = () => {
-    // 리뷰 작성 URL
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
   };
+
+  const handleCreateReviewClick = () => {};
+
+  if (!cultureData) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <CultureDetailSection>
       <div className="container">
         <div className="culture-top-container">
           <div className="culture-top-left">
-            <div className="culture-title">{"탕후루 만들기"}</div>
+            <div className="culture-title">{cultureData.name}</div>
             <img
               className="culture-image"
-              src="images/popular-doing.png"
+              src={cultureData.cultureImageUrl}
               alt="문화 이미지"
             />
-            <img />
           </div>
 
           <div className="culture-top-right">
-            <div className="location">{"동작 마포 잠실"}</div>
-            <div className="challenge">{"홈메이드 탕후루 도전하기!"}</div>
-            <div className="member">추천인원: {"4~5"}명</div>
-            <span className="likes-num">관심 수 {"10"}</span>
+            <div className="location">{cultureData.regionName}</div>
+            <div className="challenge">{cultureData.summary}</div>
+            <div className="member">
+              추천인원: {cultureData.recommendedMember}
+            </div>
+            <span className="likes-num">
+              관심 수 {cultureData.interestCount}
+            </span>
             <button className="likes-btn">관심</button>
           </div>
         </div>
@@ -62,12 +98,12 @@ const CultureDetail = () => {
               후기
             </div>
           </div>
-          {activeTab === "meet" && (
+          {activeTab === "meet" && isUserLoggedIn && (
             <CreateButton onClick={handleCreateMeetClick}>
               모임 만들기
             </CreateButton>
           )}
-          {activeTab === "review" && (
+          {activeTab === "review" && isUserLoggedIn && (
             <CreateButton onClick={handleCreateReviewClick}>
               후기 작성
             </CreateButton>
@@ -75,22 +111,28 @@ const CultureDetail = () => {
         </div>
 
         <div className="culture-detail-bottom">
-          {activeTab === "info" && <CultureInfo />}
-          {activeTab === "meet" && <CultureMeet />}
-          {activeTab === "review" && <CultureReview />}
+          {activeTab === "info" && <CultureInfo cultureData={cultureData} />}
+          {activeTab === "meet" && <CultureMeet clubs={cultureData.clubs} />}
+          {activeTab === "review" && (
+            <CultureReview reviews={cultureData.reviews} />
+          )}
         </div>
       </div>
+      {isModalOpen && (
+        <Make
+          showMakeModal={isModalOpen}
+          closeMakeModal={handleCloseModal}
+          cultureId={cultureId}
+        />
+      )}
     </CultureDetailSection>
   );
 };
 
-//스타일
 const CultureDetailSection = styled.section`
   width: 100%;
   height: auto;
-  padding: 20px;
 
-  //문화 상세 페이지 top부분
   .container {
     margin: 0;
     background-color: #fff;
@@ -108,37 +150,44 @@ const CultureDetailSection = styled.section`
     box-shadow: 2.522px 5.044px 17.905px 0px rgba(0, 0, 0, 0.14);
     font-family: KoddiUDOnGothic-Regular;
   }
+
   .culture-top-left {
     width: 420px;
   }
+
   .culture-top-right {
     padding-right: 30px;
     text-align: right;
     width: 500px;
   }
+
   .culture-title {
     font-size: 40px;
     font-weight: bold;
     color: #e02525;
     margin: 20px 40px;
   }
+
   .culture-image {
     width: 400.646px;
     height: 288.683px;
     border-radius: 15.519px;
     margin: 7px 20px;
   }
+
   .location {
     font-size: 20.407px;
     color: #7c7c7c;
     font-weight: 400;
   }
+
   .challenge {
     margin-top: 20px;
     color: #7c7c7c;
     font-size: 31.407px;
     font-weight: 400;
   }
+
   .member {
     margin-top: 70px;
     margin-bottom: 70px;
@@ -147,6 +196,7 @@ const CultureDetailSection = styled.section`
     font-size: 31.407px;
     font-weight: 400;
   }
+
   .likes-num {
     padding: 7px 16px;
     background-color: #e74c3c;
@@ -155,6 +205,7 @@ const CultureDetailSection = styled.section`
     border-radius: 10px;
     font-size: 27.711px;
   }
+
   .likes-btn {
     padding: 7px 20px;
     border: 2px solid #e74c3c;
@@ -170,51 +221,64 @@ const CultureDetailSection = styled.section`
       color: #fff;
     }
   }
+
   .container2 {
     background: #fceeec;
     margin: 0;
   }
+
   .tabContainer {
-    height: auto;
+    height: 80px;
+    padding-top: 6px;
     border-bottom: 3px solid #df2525;
-    margin-bottom: 20px;
     position: relative;
   }
 
   .tabBox {
     display: flex;
     justify-content: space-around;
+    align-items: center;
+    height: 100%;
     font-family: GmarketSans;
     font-size: 41.684px;
   }
+
   .tab {
     padding: 10px 20px;
     cursor: pointer;
   }
+
   .tab.active {
     font-weight: bold;
   }
+
   .culture-detail-bottom {
-    margin-top: 40px;
+    padding: 57px 0;
     display: flex;
     justify-content: center;
   }
 `;
+
 const CreateButton = styled.button`
   position: absolute;
   right: 10%;
   top: 50%;
   transform: translateY(130%);
   padding: 10px 20px;
+  padding-bottom: 5px;
   border: none;
   color: #fff;
   cursor: pointer;
-
   width: 164px;
   height: 49px;
   border-radius: 6.529px;
   background: linear-gradient(94deg, #e02525 -14.69%, #7a1414 99.86%);
   font-family: GmarketSans;
   font-size: 22.57px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
 `;
+
 export default CultureDetail;

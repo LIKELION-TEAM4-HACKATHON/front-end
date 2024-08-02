@@ -18,8 +18,7 @@ const GenderButton = styled(Button)`
   height: 33px;
   background-color: ${(props) => (props.isSelected ? "#EEA790" : "#fff")};
   color: ${(props) => (props.isSelected ? "#fff" : "#EEA790")};
-  box-shadow: ${(props) =>
-    props.isSelected ? "none" : "0px -1px 3px 0px rgba(0, 0, 0, 0.3) inset"};
+  box-shadow: 0px -1px 3px 0px rgba(0, 0, 0, 0.3) inset;
 `;
 
 const AgeButton = styled(Button)`
@@ -27,8 +26,7 @@ const AgeButton = styled(Button)`
   height: 33px;
   background-color: ${(props) => (props.isSelected ? "#EE90B7" : "#fff")};
   color: ${(props) => (props.isSelected ? "#fff" : "#EE90B7")};
-  box-shadow: ${(props) =>
-    props.isSelected ? "none" : "0px -1px 3px 0px rgba(0, 0, 0, 0.3) inset"};
+  box-shadow: 0px -1px 3px 0px rgba(0, 0, 0, 0.3) inset;
 `;
 
 const InputBox = styled.div`

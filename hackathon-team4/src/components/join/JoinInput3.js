@@ -53,8 +53,7 @@ const HashtagButton = styled(Button)`
   height: 35px;
   background-color: ${(props) => (props.isSelected ? "#EEA790" : "#fff")};
   color: ${(props) => (props.isSelected ? "#fff" : "#EEA790")};
-  box-shadow: ${(props) =>
-    props.isSelected ? "none" : "0px -1px 3px 0px rgba(0, 0, 0, 0.3) inset"};
+  box-shadow: 0px -1px 3px 0px rgba(0, 0, 0, 0.3) inset;
   margin-bottom: 10px;
 `;
 

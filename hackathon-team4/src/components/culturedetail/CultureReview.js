@@ -1,38 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
-const CultureReview = () => {
-  const reviews = [
-    {
-      reviewId: 1,
-      reviewer: {
-        userId: 2,
-        username: "도연",
-        profileImage: "http://example.com/profile1.jpg",
-      },
-      title: "퍼스널컬러 후기~",
-      reviewImageUrl: "http://example.com/review1.jpg",
-      cultureName: "야외활동",
-      createdDate: "2024-07-22T12:34:56Z",
-      likeCount: 3,
-      commentCount: 5,
-    },
-    {
-      reviewId: 2,
-      reviewer: {
-        userId: 10,
-        username: "신우",
-        profileImageUrl: "http://example.com/profile1.jpg",
-      },
-      title: "퍼스널컬러를 갔다왔어요~",
-      reviewImage: "http://example.com/review2.jpg",
-      cultureName: "미술과 예술",
-      createdDate: "2024-07-25T12:34:56Z",
-      likeCount: 13,
-      commentCount: 65,
-    },
-  ];
-
+const CultureReview = ({ reviews }) => {
   return (
     <ReviewContainer>
       {reviews.map((review) => (
@@ -75,6 +44,7 @@ const CultureReview = () => {
     </ReviewContainer>
   );
 };
+
 const ReviewContainer = styled.div`
   display: flex;
   flex-direction: column;

@@ -1,64 +1,42 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios";
+
+const api = axios.create({
+  baseURL: "/api",
+});
 
 const ReviewPage = () => {
-  // API 연동 전 리뷰
-  const reviews = [
-    {
-      id: 1,
-      nickname: "박신우",
-      title: "탕후루 만들기 후기",
-      type: "탕후루 만들기",
-      likes: 10,
-      comments: 3,
-      date: "2024.07.02",
-      profileImageUrl: "",
-      reviewImageUrl: "images/popular-doing.png",
-    },
-    {
-      id: 2,
-      nickname: "박신우",
-      title: "탕후루 만들기 후기",
-      type: "탕후루 만들기",
-      likes: 10,
-      comments: 3,
-      date: "2024.07.02",
-      profileImageUrl: "",
-      reviewImageUrl: "images/popular-doing.png",
-    },
-    {
-      id: 3,
-      nickname: "박신우",
-      title: "탕후루 만들기 후기",
-      type: "탕후루 만들기",
-      likes: 10,
-      comments: 3,
-      date: "2024.07.02",
-      profileImageUrl: "",
-      reviewImageUrl: "images/popular-doing.png",
-    },
-    {
-      id: 4,
-      nickname: "박신우",
-      title: "탕후루 만들기 후기",
-      type: "탕후루 만들기",
-      likes: 10,
-      comments: 3,
-      date: "2024.07.02",
-      profileImageUrl: "",
-      reviewImageUrl: "images/popular-doing.png",
-    },
-  ];
-
+  const [reviews, setReviews] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [page, setPage] = useState(0);
+
+  useEffect(() => {
+    fetchReviews();
+  }, [page, searchTerm]);
+
+  const fetchReviews = async () => {
+    try {
+      const response = await api.get(
+        `/reviews?keyword=${searchTerm}&page=${page}`
+      );
+      setReviews(response.data.reviews);
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredReviews = reviews.filter((review) =>
-    review.title.includes(searchTerm)
-  );
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
+
+  const filteredReviews = reviews
+    ? reviews.filter((review) => review.title.includes(searchTerm))
+    : [];
 
   return (
     <ReviewsPage>
@@ -73,30 +51,34 @@ const ReviewPage = () => {
 
       <ReviewsContainer>
         {filteredReviews.map((review) => (
-          <ReviewListItem key={review.id}>
+          <ReviewListItem key={review.reviewId}>
             <div className="review-list-item-box">
               <div className="review-list-profile">
                 <div
                   className="review-list-profile-image"
-                  style={{ backgroundImage: `url(${review.profileImageUrl})` }}
+                  style={{
+                    backgroundImage: `url(${review.reviewer.profileImageUrl})`,
+                  }}
                 ></div>
                 <div className="review-list-profile-nickname">
-                  {review.nickname}
+                  {review.reviewer.username}
                 </div>
               </div>
               <div className="review-list-content">
                 <div className="review-list-title">{review.title}</div>
-                <div className="review-list-type">{review.type}</div>
+                <div className="review-list-type">{review.cultureName}</div>
                 <div className="review-list-counts">
-                  <div className="review-list-likes">좋아요 {review.likes}</div>
+                  <div className="review-list-likes">
+                    좋아요 {review.likeCount}
+                  </div>
                   <div className="review-list-comments">
-                    댓글 {review.comments}
+                    댓글 {review.commentCount}
                   </div>
                 </div>
               </div>
               <div className="review-list-date">
                 <div>작성일</div>
-                <div>{review.date}</div>
+                <div>{new Date(review.createdDate).toLocaleDateString()}</div>
               </div>
               <div
                 className="review-list-image"
@@ -108,9 +90,14 @@ const ReviewPage = () => {
       </ReviewsContainer>
 
       <Pagination>
-        <button>&lt;</button>
-        <span>1</span>
-        <button>&gt;</button>
+        <button
+          onClick={() => handlePageChange(page - 1)}
+          disabled={page === 0}
+        >
+          &lt;
+        </button>
+        <span>{page + 1}</span>
+        <button onClick={() => handlePageChange(page + 1)}>&gt;</button>
       </Pagination>
     </ReviewsPage>
   );
@@ -132,7 +119,6 @@ const SearchContainer = styled.div`
     width: 738px;
     height: 43px;
     border: 0px solid #ccc;
-
     font-size: 22.929px;
     border-radius: 8px;
     background: #fff;
@@ -162,6 +148,11 @@ const Pagination = styled.div`
     background-color: #fff;
     cursor: pointer;
     border-radius: 4px;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
   }
 
   span {
