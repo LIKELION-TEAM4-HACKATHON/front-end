@@ -80,26 +80,65 @@ const InputBox = styled.div`
   }
 `;
 
-const MakeInput2 = ({ onValidityChange }) => {
-  const [date, setDate] = useState("");
-  const [maxPeople, setMaxPeople] = useState("");
-  const [isDateSelected, setIsDateSelected] = useState(false);
-  const [isMaxPeopleSelected, setIsMaxPeopleSelected] = useState(false);
+const MakeInput2 = ({ initialData, onValidityChange, onDataChange }) => {
+  const [date, setDate] = useState(initialData.meetingDate || "");
+  const [maxPeople, setMaxPeople] = useState(initialData.maxParticipant || "");
+  const [isDateSelected, setIsDateSelected] = useState(
+    initialData.isDateSelected || false
+  );
+  const [isMaxPeopleSelected, setIsMaxPeopleSelected] = useState(
+    initialData.isMaxPeopleSelected || false
+  );
 
   useEffect(() => {
     const isValid =
-      (date || isDateSelected) && (maxPeople || isMaxPeopleSelected);
+      ((date && date !== "2100-12-31") || isDateSelected) &&
+      ((maxPeople && maxPeople !== 100) || isMaxPeopleSelected);
     onValidityChange(isValid);
-  }, [date, maxPeople, isDateSelected, isMaxPeopleSelected, onValidityChange]);
+    onDataChange({
+      meetingDate: date,
+      maxParticipant: maxPeople,
+      isDateSelected,
+      isMaxPeopleSelected,
+    });
+  }, [
+    date,
+    maxPeople,
+    isDateSelected,
+    isMaxPeopleSelected,
+    onValidityChange,
+    onDataChange,
+  ]);
 
   const toggleDateSelection = () => {
+    if (isDateSelected) {
+      setDate("");
+    } else {
+      setDate("2100-12-31");
+    }
     setIsDateSelected(!isDateSelected);
-    if (isDateSelected) setDate("");
   };
 
   const toggleMaxPeopleSelection = () => {
+    if (isMaxPeopleSelected) {
+      setMaxPeople("");
+    } else {
+      setMaxPeople(100);
+    }
     setIsMaxPeopleSelected(!isMaxPeopleSelected);
-    if (isMaxPeopleSelected) setMaxPeople("");
+  };
+
+  const handleMaxPeopleChange = (e) => {
+    let value = parseInt(e.target.value, 10);
+    if (isNaN(value)) value = "";
+    else if (value < 1) value = 1;
+    else if (value > 20) value = 20;
+    setMaxPeople(value);
+    setIsMaxPeopleSelected(false);
+  };
+
+  const handleMaxPeopleBlur = () => {
+    if (maxPeople === "") setMaxPeople(1);
   };
 
   return (
@@ -111,7 +150,7 @@ const MakeInput2 = ({ onValidityChange }) => {
           type="date"
           className="date"
           placeholder="선택"
-          value={date}
+          value={date !== "2100-12-31" ? date : ""}
           onChange={(e) => {
             setDate(e.target.value);
             setIsDateSelected(false);
@@ -122,18 +161,18 @@ const MakeInput2 = ({ onValidityChange }) => {
           미정
         </NotSelectBtn>
       </span>
-      <div className="smallTitle">최대 인원</div>
+      <div className="smallTitle">인원 설정 (최소 1명, 최대 20명)</div>
       <span className="inputContainer">
         <input
           type="number"
           className="number"
           placeholder="선택"
-          value={maxPeople}
-          onChange={(e) => {
-            setMaxPeople(e.target.value);
-            setIsMaxPeopleSelected(false);
-          }}
+          value={maxPeople !== 100 ? maxPeople : ""}
+          onChange={handleMaxPeopleChange}
+          onBlur={handleMaxPeopleBlur}
           disabled={isMaxPeopleSelected}
+          min={1}
+          max={20}
         />
         <NotSelectBtn
           selected={isMaxPeopleSelected}

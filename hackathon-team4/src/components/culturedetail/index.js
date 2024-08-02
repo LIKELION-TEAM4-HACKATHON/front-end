@@ -1,21 +1,17 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import axios from "axios";
+import api from "../../api";
 import CultureInfo from "./CultureInfo";
 import CultureMeet from "./CultureMeet";
 import CultureReview from "./CultureReview";
 import { useParams } from "react-router-dom";
-// 모달 컴포넌트 임폴트
+import Make from "../makeClub/Make";
 
-const api = axios.create({
-  baseURL: "/api",
-});
-
-const CultureDetail = ({}) => {
+const CultureDetail = () => {
   const { cultureId } = useParams();
   const [activeTab, setActiveTab] = useState("info");
   const [cultureData, setCultureData] = useState(null);
-  // const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchCultureDetail = async () => {
@@ -35,12 +31,12 @@ const CultureDetail = ({}) => {
   };
 
   const handleCreateMeetClick = () => {
-    // setIsModalOpen(true); // 모달을 열도록 상태 변경
+    setIsModalOpen(true);
   };
 
-  // const handleCloseModal = () => {
-  //   setIsModalOpen(false); // 모달을 닫도록 상태 변경
-  // };
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   const handleCreateReviewClick = () => {};
 
@@ -116,7 +112,13 @@ const CultureDetail = ({}) => {
           )}
         </div>
       </div>
-      {/* {isModalOpen && <CreateMeetModal onClose={handleCloseModal} />} */}
+      {isModalOpen && (
+        <Make
+          showMakeModal={isModalOpen}
+          closeMakeModal={handleCloseModal}
+          cultureId={cultureId}
+        />
+      )}
     </CultureDetailSection>
   );
 };

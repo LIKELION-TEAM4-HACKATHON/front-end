@@ -6,16 +6,17 @@ const InputBox = styled.div`
   font-family: KoddiUDOnGothic-Regular;
   font-size: 21px;
 
-  input {
+  input,
+  textarea {
     color: #7c7c7c;
     width: 100%;
-    height: 60px;
     background: #fff;
     border: none;
     border-radius: 8px;
     box-shadow: 0px 2px 14.7px 0px rgba(0, 0, 0, 0.1) inset;
     display: block;
-    padding: 10px 0 10px 10px;
+    padding: 10px;
+    margin-bottom: 16px;
     box-sizing: border-box;
     font-size: 21px;
     font-family: KoddiUDOnGothic-Regular;
@@ -30,27 +31,8 @@ const InputBox = styled.div`
   }
 
   textarea {
-    color: #7c7c7c;
-    width: 100%;
     height: 194px;
-    background: #fff;
-    border: none;
-    border-radius: 8px;
-    box-shadow: 0px 2px 14.7px 0px rgba(0, 0, 0, 0.1) inset;
-    display: block;
-    padding: 10px 0 10px 10px;
-    box-sizing: border-box;
-    font-size: 21px;
-    font-family: KoddiUDOnGothic-Regular;
     resize: none;
-    &::placeholder {
-      font-size: 21px;
-      font-family: KoddiUDOnGothic-Regular;
-    }
-    &:focus {
-      outline: none;
-      border: 1px solid gray;
-    }
   }
 
   .inputTitle {
@@ -59,14 +41,15 @@ const InputBox = styled.div`
   }
 `;
 
-const MakeInput1 = ({ onValidityChange }) => {
-  const [text, setText] = useState("");
-  const [description, setDescription] = useState("");
+const MakeInput1 = ({ initialData, onValidityChange, onDataChange }) => {
+  const [text, setText] = useState(initialData.title || "");
+  const [description, setDescription] = useState(initialData.content || "");
 
   useEffect(() => {
     const isValid = text.trim() !== "" && description.trim() !== "";
     onValidityChange(isValid);
-  }, [text, description, onValidityChange]);
+    onDataChange({ title: text, content: description });
+  }, [text, description, onValidityChange, onDataChange]);
 
   return (
     <InputBox>

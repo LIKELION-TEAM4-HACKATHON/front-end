@@ -74,13 +74,24 @@ const AgeButton = styled(Button)`
   cursor: pointer;
 `;
 
-const MakeInput3 = ({ onValidityChange }) => {
-  const [selectedGender, setSelectedGender] = useState(null);
-  const [selectedAge, setSelectedAge] = useState(null);
+const MakeInput3 = ({ initialData, onValidityChange, onDataChange }) => {
+  const [selectedGender, setSelectedGender] = useState(
+    initialData.genderRestriction || null
+  );
+  const [selectedAge, setSelectedAge] = useState(
+    initialData.ageRestriction || null
+  );
 
   useEffect(() => {
-    onValidityChange(selectedGender !== null && selectedAge !== null);
-  }, [selectedGender, selectedAge, onValidityChange]);
+    const isValid = selectedGender !== null && selectedAge !== null;
+    onValidityChange(isValid);
+
+    onDataChange({
+      genderRestriction:
+        selectedGender === "제한없음" ? "none" : selectedGender,
+      ageRestriction: selectedAge === "제한없음" ? "none" : selectedAge,
+    });
+  }, [selectedGender, selectedAge, onValidityChange, onDataChange]);
 
   const handleGenderSelect = (gender) => {
     if (gender === "제한없음") {
@@ -103,19 +114,11 @@ const MakeInput3 = ({ onValidityChange }) => {
   };
 
   const toggleGenderNotSelected = () => {
-    if (selectedGender === "제한없음") {
-      setSelectedGender(null);
-    } else {
-      setSelectedGender("제한없음");
-    }
+    setSelectedGender((prev) => (prev === "제한없음" ? null : "제한없음"));
   };
 
   const toggleAgeNotSelected = () => {
-    if (selectedAge === "제한없음") {
-      setSelectedAge(null);
-    } else {
-      setSelectedAge("제한없음");
-    }
+    setSelectedAge((prev) => (prev === "제한없음" ? null : "제한없음"));
   };
 
   return (
@@ -149,34 +152,32 @@ const MakeInput3 = ({ onValidityChange }) => {
         </NotSelectBtn>
       </span>
       <div className="smallTitle">나이</div>
-      <span className="inputContainer">
-        <div className="row">
-          <AgeButton
-            isSelected={selectedAge === "4학년" || selectedAge === "제한없음"}
-            onClick={() => handleAgeSelect("4학년")}
-          >
-            4학년
-          </AgeButton>
-          <AgeButton
-            isSelected={selectedAge === "5학년" || selectedAge === "제한없음"}
-            onClick={() => handleAgeSelect("5학년")}
-          >
-            5학년
-          </AgeButton>
-          <AgeButton
-            isSelected={selectedAge === "6학년" || selectedAge === "제한없음"}
-            onClick={() => handleAgeSelect("6학년")}
-          >
-            6학년
-          </AgeButton>
-        </div>
+      <div className="inputContainer">
+        <AgeButton
+          isSelected={selectedAge === "4학년" || selectedAge === "제한없음"}
+          onClick={() => handleAgeSelect("4학년")}
+        >
+          4학년
+        </AgeButton>
+        <AgeButton
+          isSelected={selectedAge === "5학년" || selectedAge === "제한없음"}
+          onClick={() => handleAgeSelect("5학년")}
+        >
+          5학년
+        </AgeButton>
+        <AgeButton
+          isSelected={selectedAge === "6학년" || selectedAge === "제한없음"}
+          onClick={() => handleAgeSelect("6학년")}
+        >
+          6학년
+        </AgeButton>
         <NotSelectBtn
           selected={selectedAge === "제한없음"}
           onClick={toggleAgeNotSelected}
         >
           제한없음
         </NotSelectBtn>
-      </span>
+      </div>
     </InputBox>
   );
 };
