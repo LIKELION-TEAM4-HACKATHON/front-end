@@ -1,8 +1,145 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import api from "../../api";
+
+const Arrow = ({ onClick, direction, src }) => (
+  <div
+    className={`custom-arrow ${
+      direction === "left" ? "arrow-left" : "arrow-right"
+    }`}
+    onClick={onClick}
+  >
+    <img src={src} alt={`${direction} arrow`} />
+  </div>
+);
+
+const Main = () => {
+  const [popularCultures, setPopularCultures] = useState([]);
+  const [popularReviews, setPopularReviews] = useState([]);
+  const [recentClubs, setRecentClubs] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await api.get("/api/main");
+        setPopularCultures(response.data.popularCultures.slice(0, 4));
+        setPopularReviews(response.data.popularReviews.slice(0, 1));
+        setRecentClubs(response.data.recentClubs.slice(0, 2));
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
+  }, []);
+  const settings = {
+    dots: false,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    nextArrow: <Arrow direction="right" src="images/arrow-right.svg" />,
+    prevArrow: <Arrow direction="left" src="images/arrow-left.svg" />,
+  };
+
+  return (
+    <MainSection>
+      <div className="banner">
+        <Slider {...settings}>
+          <div>
+            <SlideImage src="images/banner1.png" alt="Slide Image" />
+          </div>
+          <div>
+            <SlideImage src="images/banner2.png" alt="Slide Image" />
+          </div>
+        </Slider>
+      </div>
+      <div className="popular1">인기 뭐햐</div>
+      <div className="doing">
+        {popularCultures.map((culture) => (
+          <PopularDoing key={culture.cultureId}>
+            <img src={culture.cultureImageUrl} alt={culture.name} />
+            <div className="doing-text-content">
+              <div className="popular-doing-title">{culture.name}</div>
+              <div className="popular-doing-contents">{culture.summary}</div>
+            </div>
+            <div className="count">
+              <div className="like-count">관심 {culture.interestCount}</div>
+              <div className="chat-count">모임 {culture.clubCount}</div>
+            </div>
+          </PopularDoing>
+        ))}
+      </div>
+      <div className="review">
+        <div className="review-text-box">
+          <div className="popular2">인기 후기</div>
+          <div className="review-text1">오늘 뭐햐?</div>
+          <div className="review-text2">
+            추천으로
+            <br />
+            놀아봐!
+          </div>
+          <div className="review-text3">유경험자의 추천!</div>
+        </div>
+        <div className="review-api-box">
+          {popularReviews.map((review) => (
+            <PopularReview key={review.reviewId}>
+              <div className="review-text-content">
+                <div className="writer">
+                  <img
+                    src={review.reviewer.profileImageUrl}
+                    alt={review.reviewer.username}
+                  />
+                  <div className="nickname">{review.reviewer.username} 님</div>
+                </div>
+                <div className="popular-review-title">{review.title}</div>
+                <div className="popular-review-contents">
+                  {review.cultureName}
+                </div>
+              </div>
+              <div className="review-image-box">
+                <img src={review.reviewImageUrl} alt={review.title} />
+                <div className="date">
+                  작성일: {new Date(review.createdDate).toLocaleDateString()}
+                </div>
+              </div>
+              <div className="count">
+                <div className="like-count">좋아요 {review.likeCount}</div>
+                <div className="chat-count">댓글 {review.commentCount}</div>
+              </div>
+            </PopularReview>
+          ))}
+        </div>
+      </div>
+      <div className="popular1">인기 모임</div>
+      <div className="chat">
+        {recentClubs.map((club) => (
+          <PopularChat key={club.clubId}>
+            <div className="popular-chat-content">
+              <div className="chat-title-box">
+                <img src={club.leaderProfileImage} alt={club.title} />
+                <div className="chat-title">{club.title}</div>
+              </div>
+              <div className="region">{club.regionName}</div>
+              <div className="category">{club.cultureName}</div>
+              <div className="due-date">모임 날짜: {club.meetingDate}</div>
+              <div className="hashtags-box">
+                <span className="hashtag">#{club.genderRestriction}</span>
+                <span className="hashtag">#{club.ageRestriction}</span>
+              </div>
+              <div className="limit">
+                {club.currentParticipant}/{club.maxParticipant}
+              </div>
+            </div>
+          </PopularChat>
+        ))}
+      </div>
+    </MainSection>
+  );
+};
 
 const MainSection = styled.div`
   width: 100%;
@@ -377,180 +514,5 @@ const PopularChat = styled.div`
     bottom: 20px;
   }
 `;
-
-const Arrow = ({ onClick, direction, src }) => (
-  <div
-    className={`custom-arrow ${
-      direction === "left" ? "arrow-left" : "arrow-right"
-    }`}
-    onClick={onClick}
-  >
-    <img src={src} alt={`${direction} arrow`} />
-  </div>
-);
-
-const Main = () => {
-  const settings = {
-    dots: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    nextArrow: <Arrow direction="right" src="images/arrow-right.svg" />,
-    prevArrow: <Arrow direction="left" src="images/arrow-left.svg" />,
-  };
-
-  return (
-    <MainSection>
-      <div className="banner">
-        <Slider {...settings}>
-          <div>
-            <SlideImage src="images/tmp.png" alt="Slide Image" />
-          </div>
-          <div>
-            <SlideImage src="images/tmp.png" alt="Slide Image" />
-          </div>
-          <div>
-            <SlideImage src="images/tmp.png" alt="Slide Image" />
-          </div>
-        </Slider>
-      </div>
-      <div className="popular1">인기 뭐햐</div>
-      <div className="doing">
-        <PopularDoing>
-          <img src="images/popular-doing.png" alt="Popular Doing" />
-          <div className="doing-text-content">
-            <div className="popular-doing-title">
-              탕후루 만들기 {/*db 연동 예정*/}
-            </div>
-            <div className="popular-doing-contents">
-              집에서 만드는 홈메이드 탕후루 도전하기!
-            </div>
-          </div>
-          <div className="count">
-            <div className="like-count">관심 {/*db 연동 예정*/}</div>
-            <div className="chat-count">모임 {/*db 연동 예정*/}</div>
-          </div>
-        </PopularDoing>
-        <PopularDoing>
-          <img src="images/popular-doing.png" alt="Popular Doing" />
-          <div className="doing-text-content">
-            <div className="popular-doing-title">
-              탕후루 만들기 {/*db 연동 예정*/}
-            </div>
-            <div className="popular-doing-contents">
-              집에서 만드는 홈메이드 탕후루 도전하기!
-            </div>
-          </div>
-          <div className="count">
-            <div className="like-count">관심 {/*db 연동 예정*/}</div>
-            <div className="chat-count">모임 {/*db 연동 예정*/}</div>
-          </div>
-        </PopularDoing>
-        <PopularDoing>
-          <img src="images/popular-doing.png" alt="Popular Doing" />
-          <div className="doing-text-content">
-            <div className="popular-doing-title">
-              탕후루 만들기 {/*db 연동 예정*/}
-            </div>
-            <div className="popular-doing-contents">
-              집에서 만드는 홈메이드 탕후루 도전하기!
-            </div>
-          </div>
-          <div className="count">
-            <div className="like-count">관심 {/*db 연동 예정*/}</div>
-            <div className="chat-count">모임 {/*db 연동 예정*/}</div>
-          </div>
-        </PopularDoing>
-        <PopularDoing>
-          <img src="images/popular-doing.png" alt="Popular Doing" />
-          <div className="doing-text-content">
-            <div className="popular-doing-title">
-              탕후루 만들기 {/*db 연동 예정*/}
-            </div>
-            <div className="popular-doing-contents">
-              집에서 만드는 홈메이드 탕후루 도전하기!
-            </div>
-          </div>
-          <div className="count">
-            <div className="like-count">관심 {/*db 연동 예정*/}</div>
-            <div className="chat-count">모임 {/*db 연동 예정*/}</div>
-          </div>
-        </PopularDoing>
-      </div>
-      <div className="review">
-        <div className="review-text-box">
-          <div className="popular2">인기 후기</div>
-          <div className="review-text1">오늘 뭐햐?</div>
-          <div className="review-text2">
-            추천으로
-            <br />
-            놀아봐!
-          </div>
-          <div className="review-text3">유경험자의 추천!</div>
-        </div>
-        <div className="review-api-box">
-          <PopularReview>
-            <div className="review-text-content">
-              <div className="writer">
-                <img src="images/popular-doing.png" alt="Popular Review" />
-                <div className="nickname">김도연 님</div>
-              </div>
-              <div className="popular-review-title">
-                탕후루 도전기 {/*db 연동 예정*/}
-              </div>
-              <div className="popular-review-contents">
-                탕후루를 만들어 봤어요.
-              </div>
-            </div>
-            <div className="review-image-box">
-              <img src="images/popular-doing.png" alt="Popular Review" />
-              <div className="date">작성일: 2024.07.26</div>
-            </div>
-            <div className="count">
-              <div className="like-count">좋아요 {/*db 연동 예정*/}</div>
-              <div className="chat-count">댓글 {/*db 연동 예정*/}</div>
-            </div>
-          </PopularReview>
-        </div>
-      </div>
-      <div className="popular1">인기 모임</div>
-      <div className="chat">
-        <PopularChat>
-          <div className="popular-chat-content">
-            <div className="chat-title-box">
-              <img src="images/popular-doing.png" alt="Popular Review" />
-              <div className="chat-title">멋쟁이사자처럼 모임</div>
-            </div>
-            <div className="region">노원</div>
-            <div className="category">클라이밍</div>
-            <div className="due-date">2024년 7월 31일 예정</div>
-            <div className="hashtags-box">
-              <span className="hashtag">#남자</span>
-              <span className="hashtag">#5학년</span>
-            </div>
-            <div className="limit">현재인원/최대인원</div>
-          </div>
-        </PopularChat>
-        <PopularChat>
-          <div className="popular-chat-content">
-            <div className="chat-title-box">
-              <img src="images/popular-doing.png" alt="Popular Review" />
-              <div className="chat-title">멋쟁이사자처럼 모임</div>
-            </div>
-            <div className="region">노원</div>
-            <div className="category">클라이밍</div>
-            <div className="due-date">2024년 7월 31일 예정</div>
-            <div className="hashtags-box">
-              <span className="hashtag">#남자</span>
-              <span className="hashtag">#5학년</span>
-            </div>
-            <div className="limit">5/6</div>
-          </div>
-        </PopularChat>
-      </div>
-    </MainSection>
-  );
-};
 
 export default Main;
