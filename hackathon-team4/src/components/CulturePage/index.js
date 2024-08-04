@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 import CategoryMenu from "./CategoryMenu";
@@ -8,100 +8,125 @@ const api = axios.create({
   baseURL: "/api",
 });
 
-class CulturePage extends Component {
-  constructor() {
-    super();
-    this.state = {
-      allCultures: [], // 전체 문화 데이터를 저장할 상태
-      cultures: [], // 필터링된 문화 데이터를 저장할 상태
-      category: "전체", // 기본 카테고리는 전체로 설정
-      pageNum: 1,
-    };
-  }
+const CulturePage = () => {
+  const [allCultures, setAllCultures] = useState([]);
+  const [cultures, setCultures] = useState([]);
+  const [interestCultures, setInterestCultures] = useState([]);
+  const [category, setCategory] = useState("전체");
+  const [pageNum, setPageNum] = useState(1);
+  const [showInterest, setShowInterest] = useState(false);
 
-  componentDidMount() {
-    this.fetchAllCultures();
-  }
+  useEffect(() => {
+    fetchCultures();
+  }, [category, pageNum]);
 
-  fetchAllCultures = async () => {
+  useEffect(() => {
+    fetchMyInterestCultures();
+  }, []);
+
+  const fetchCultures = async () => {
     try {
-      const response = await api.get("/cultures", {
-        params: {
-          category: "",
-          page: 0,
-        },
-      });
-      this.setState({ allCultures: response.data.content }, () => {
-        this.filterCultures();
-      });
+      const params = {
+        page: pageNum - 1,
+      };
+      if (category !== "전체") {
+        params.category = category;
+      }
+
+      const response = await api.get("/api/cultures", { params });
+      setAllCultures(response.data.content);
+      setCultures(response.data.content);
     } catch (error) {
       console.error("Failed to fetch cultures", error);
     }
   };
 
-  filterCultures = () => {
-    const { allCultures, category } = this.state;
-    if (category === "전체") {
-      this.setState({ cultures: allCultures });
-    } else {
-      const filteredCultures = allCultures.filter(
-        (culture) => culture.cultureCategoryName === category
-      );
-      this.setState({ cultures: filteredCultures });
+  // 나의 관심 문화
+  const fetchMyInterestCultures = async () => {
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        throw new Error("No token found");
+      }
+
+      const response = await api.get("/api/cultures/interest", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        params: {
+          category: category !== "전체" ? category : undefined,
+          page: pageNum - 1,
+        },
+      });
+      setInterestCultures(response.data.content);
+    } catch (error) {
+      console.error("Failed to fetch interest cultures", error);
     }
   };
 
-  handleCategoryChange = (category) => {
-    this.setState({ category, pageNum: 1 }, () => {
-      this.filterCultures();
-    });
+  const handleCategoryChange = (newCategory) => {
+    setCategory(newCategory);
+    setPageNum(1);
   };
 
-  handlePageChange = (direction) => {
-    this.setState((prevState) => ({
-      pageNum: prevState.pageNum + direction,
-    }));
+  const handlePageChange = (direction) => {
+    const newPageNum = pageNum + direction;
+    if (newPageNum > 0) {
+      setPageNum(newPageNum);
+    }
   };
 
-  render() {
-    const { cultures, pageNum } = this.state;
+  const toggleShowInterest = () => {
+    setShowInterest(!showInterest);
+  };
 
-    return (
-      <CulturePageContainer>
-        <div className="culture-top">
-          <div className="culture-top-title">요즘 뭐해?</div>
-          <div className="culture-top-subtitle">
-            항상 새롭고 신기한 추억을 쌓을 수 있는 문화 컨텐츠를 볼 수 있습니다.
-          </div>
+  return (
+    <CulturePageContainer>
+      <div className="culture-top">
+        <div className="culture-top-title">요즘 뭐해?</div>
+        <div className="culture-top-subtitle">
+          항상 새롭고 신기한 추억을 쌓을 수 있는 문화 컨텐츠를 볼 수 있습니다.
         </div>
+      </div>
+      <div className="my-interest-culture">
+        <button onClick={toggleShowInterest}>
+          {showInterest ? "전체 문화 보기" : "나의 관심 보기"}
+        </button>
+      </div>
+      {showInterest ? (
+        <InterestSection>
+          <CultureList cultures={interestCultures} />{" "}
+          {/* 나의 관심 문화 리스트 표시 */}
+        </InterestSection>
+      ) : (
         <CategorySection>
           <div className="culture-category-box">
             <CategoryMenu
-              onCategoryChange={this.handleCategoryChange}
-              selectedCategory={this.state.category}
+              onCategoryChange={handleCategoryChange}
+              selectedCategory={category}
             />
           </div>
           <div className="culture-list-box">
             <CultureList cultures={cultures} />
           </div>
         </CategorySection>
-        <div className="page">
-          <img
-            src="images/back-button.png"
-            alt="back-button"
-            onClick={() => this.handlePageChange(-1)}
-          />
-          <div className="pageNumBox">{pageNum}</div>
-          <img
-            src="images/next-button.png"
-            alt="next-button"
-            onClick={() => this.handlePageChange(1)}
-          />
-        </div>
-      </CulturePageContainer>
-    );
-  }
-}
+      )}
+      <div className="page">
+        <img
+          src="images/back-button.png"
+          alt="back-button"
+          onClick={() => handlePageChange(-1)}
+        />
+        <div className="pageNumBox">{pageNum}</div>
+        <img
+          src="images/next-button.png"
+          alt="next-button"
+          onClick={() => handlePageChange(1)}
+        />
+      </div>
+    </CulturePageContainer>
+  );
+};
 
 const CulturePageContainer = styled.div`
   background-color: #f8f9fa;
@@ -140,13 +165,30 @@ const CulturePageContainer = styled.div`
     height: 47px;
     margin: 0 36px;
     border-radius: 4px;
-    background: #fff;
+    background: #f8f9fa;
     color: #7c7c7c;
     text-align: center;
     font-family: GmarketSans;
     font-size: 38px;
     font-weight: 500;
     line-height: 1.4;
+  }
+
+  .my-interest-culture {
+    font-size: 24px;
+    font-weight: bold;
+    margin: 20px 20%;
+    display: flex;
+    justify-content: flex-end;
+
+    button {
+      padding: 10px 20px;
+      background-color: #f8f9fa;
+      border: none;
+      cursor: pointer;
+      color: #df2525;
+      font-size: 22.929px;
+    }
   }
 `;
 
@@ -164,6 +206,16 @@ const CategorySection = styled.div`
   }
   .culture-list-box {
     padding: 0px 100px;
+  }
+`;
+
+const InterestSection = styled.div`
+  margin: 40px 30px;
+
+  .interest-title {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
   }
 `;
 

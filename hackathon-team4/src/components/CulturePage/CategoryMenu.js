@@ -27,24 +27,24 @@ const Menu = styled.ul`
 `;
 
 const hashtags = [
-  "전체",
-  "'나' 찾기",
-  "예술과 교양",
-  "야외활동",
-  "실내활동",
-  "배움",
+  { id: 0, name: "전체" },
+  { id: 1, name: "'나' 찾기" },
+  { id: 2, name: "예술과 교양" },
+  { id: 3, name: "야외활동" },
+  { id: 4, name: "실내활동" },
+  { id: 5, name: "배움" },
 ];
 
 const CategoryMenu = ({ onCategoryChange, selectedCategory }) => {
   return (
     <Menu>
-      {hashtags.map((category, index) => (
+      {hashtags.map((category) => (
         <li
-          key={index}
-          onClick={() => onCategoryChange(category)}
-          className={selectedCategory === category ? "active" : ""}
+          key={category.id}
+          onClick={() => onCategoryChange(category.id)}
+          className={selectedCategory === category.id ? "active" : ""}
         >
-          {category}
+          {category.name}
         </li>
       ))}
     </Menu>
