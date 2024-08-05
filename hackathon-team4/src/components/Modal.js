@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 const ModalBackground = styled.div`
@@ -34,10 +35,23 @@ const CloseButton = styled.button`
 `;
 
 const Modal = ({ showModal, closeModal, children }) => {
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleMouseDown = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseMove = () => {
+    setIsDragging(true);
+  };
+
   if (!showModal) return null;
 
   return (
-    <ModalBackground onClick={closeModal}>
+    <ModalBackground
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+    >
       <ModalContent onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={closeModal}>&times;</CloseButton>
         {children}
