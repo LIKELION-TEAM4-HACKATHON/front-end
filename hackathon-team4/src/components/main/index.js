@@ -99,16 +99,16 @@ const Main = () => {
                 <div className="popular-review-contents">
                   {review.cultureName}
                 </div>
+                <div className="count">
+                  <div className="like-count">좋아요 {review.likeCount}</div>
+                  <div className="chat-count">댓글 {review.commentCount}</div>
+              </div>
               </div>
               <div className="review-image-box">
                 <img src={review.reviewImageUrl} alt={review.title} />
                 <div className="date">
                   작성일: {new Date(review.createdDate).toLocaleDateString()}
                 </div>
-              </div>
-              <div className="count">
-                <div className="like-count">좋아요 {review.likeCount}</div>
-                <div className="chat-count">댓글 {review.commentCount}</div>
               </div>
             </PopularReview>
           ))}
@@ -191,7 +191,7 @@ const MainSection = styled.div`
     margin: 0 152px 84px 152px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(486.682px, 1fr));
-    gap: 20px;
+    gap: 40px;
   }
 
   .review {
@@ -302,7 +302,6 @@ const SlideImage = styled.img`
 const PopularDoing = styled.div`
   display: grid;
   grid-template-columns: 1fr 2fr;
-  width: 486.682px;
   height: 247.374px;
   border-radius: 20px;
   background: #fff;
@@ -350,16 +349,14 @@ const PopularReview = styled.div`
   display: flex;
   justify-content: space-between;
   width: 580px;
-  height: 270px;
   border-radius: 20px;
   background: #fff;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 40px;
+  padding: 30px 40px; 
   position: relative;
 
   .review-text-content {
-    flex: 1;
-    margin-right: 20px;
+    margin-right: 10px;
     margin-top: 10px;
     display: flex;
     flex-direction: column;
@@ -371,7 +368,7 @@ const PopularReview = styled.div`
         width: 50px;
         height: 50px;
         border-radius: 50%;
-        margin-right: 20px;
+        margin-right: 10px;
       }
       .nickname {
         color: #000;
@@ -385,8 +382,8 @@ const PopularReview = styled.div`
   .popular-review-title {
     color: #e02525;
     font-family: KoddiUDOnGothic-Bold;
-    font-size: 35px;
-    margin-top: 21px;
+    font-size: 34px;
+    margin-top: 10px;
     margin-bottom: 8px;
   }
 
@@ -418,9 +415,7 @@ const PopularReview = styled.div`
   }
 
   .count {
-    position: absolute;
-    bottom: 30px;
-    left: 30px;
+    margin-top: 10px;
     display: flex;
     align-items: center;
   }
@@ -449,7 +444,7 @@ const PopularChat = styled.div`
       width: 31px;
       height: 31px;
       border-radius: 50%;
-      margin-right: 15px;
+      margin-right: 10px;
     }
     .chat-title {
       color: #000;
@@ -463,7 +458,6 @@ const PopularChat = styled.div`
   .region {
     color: #e02525;
     font-family: KoddiUDOnGothic-Regular;
-    margin-bottom: 4px;
     position: absolute;
     right: 20px;
     top: 20px;
@@ -473,10 +467,11 @@ const PopularChat = styled.div`
     color: #e02525;
     font-family: KoddiUDOnGothic-Bold;
     font-size: 24.023px;
-    margin-bottom: 4px;
+
   }
 
   .due-date {
+    border-radius: 8px;
     width: auto;
     height: 36px;
     background-color: #cb3939;
@@ -484,7 +479,6 @@ const PopularChat = styled.div`
     text-align: center;
     font-family: KoddiUDOnGothic-Regular;
     font-size: 15px;
-    margin: 6px;
     justify-content: center;
     align-items: center;
     display: flex;
