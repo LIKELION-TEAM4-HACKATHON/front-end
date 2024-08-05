@@ -7,20 +7,23 @@ const InfoContainer = styled.div`
   background-color: #f8f9fa;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  font-family: KoddiUDOnGothic-Regular;
 `;
 
 const Content = styled.div`
   .culture-title {
-    font-size: 40px;
+    font-size: 30px;
     font-weight: bold;
     margin-top: 10px;
     margin-bottom: 30px;
-    color: #7c7c7c;
+    margin-left: 0px;
+    background-color: #df2525;
+    color: #fff;
   }
   .culture-content {
-    font-size: 30px;
+    font-size: 20px;
     font-weight: bold;
-    line-height: 50px;
+    line-height: 26px;
   }
 `;
 

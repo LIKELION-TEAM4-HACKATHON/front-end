@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import api from "../../api";
+import axios from "axios";
 import CultureInfo from "./CultureInfo";
 import CultureMeet from "./CultureMeet";
 import CultureReview from "./CultureReview";
@@ -19,7 +19,9 @@ const CultureDetail = () => {
   useEffect(() => {
     const fetchCultureDetail = async () => {
       try {
-        const response = await api.get("/api/cultures/" + cultureId);
+        const response = await axios.get(
+          "http://3.37.154.200:8080/api/cultures/" + cultureId
+        );
         console.log("Response:", response.data);
         setCultureData(response.data);
       } catch (error) {
@@ -32,7 +34,9 @@ const CultureDetail = () => {
   useEffect(() => {
     const fetchSummary = async () => {
       try {
-        const response = await api.get("/api/cultures");
+        const response = await axios.get(
+          "http://3.37.154.200:8080/api/cultures"
+        );
         const culture = response.data.content.find(
           (culture) => culture.cultureId === parseInt(cultureId)
         );
@@ -68,8 +72,8 @@ const CultureDetail = () => {
   const handleInterestToggle = async () => {
     const token = localStorage.getItem("accessToken");
     try {
-      const response = await api.put(
-        `/api/cultures/${cultureId}/interests`,
+      const response = await axios.put(
+        `http://3.37.154.200:8080/api/cultures/${cultureId}/interests`,
         {},
         {
           headers: {
