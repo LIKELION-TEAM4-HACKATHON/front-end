@@ -1,12 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import axios from "axios";
 import CategoryMenu from "./CategoryMenu";
 import CultureList from "./CultureList";
-
-const api = axios.create({
-  baseURL: "/api",
-});
+import api from "../../api";
 
 const CulturePage = () => {
   const [allCultures, setAllCultures] = useState([]);
@@ -41,7 +37,6 @@ const CulturePage = () => {
     }
   };
 
-  // 나의 관심 문화
   const fetchMyInterestCultures = async () => {
     try {
       const token = localStorage.getItem("accessToken");

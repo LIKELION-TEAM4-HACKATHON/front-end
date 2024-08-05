@@ -1,20 +1,17 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import axios from "axios";
-
-const api = axios.create({
-  baseURL: "/api",
-});
+import { useParams } from "react-router-dom";
+import api from "../../api";
 
 const ReviewPage = () => {
+  const { reviewId } = useParams();
   const [reviewDetail, setReviewDetail] = useState(null);
+
   useEffect(() => {
     const fetchReviewDetail = async () => {
       try {
-        const response = await api.get("/reviews/{reviewId}");
-
+        const response = await api.get("/api/reviews/${reviewId}");
         console.log("Review detail fetched:", response.data);
-
         setReviewDetail(response.data);
       } catch (error) {
         console.error("Failed to fetch review detail", error);
@@ -22,7 +19,7 @@ const ReviewPage = () => {
     };
 
     fetchReviewDetail();
-  }, []);
+  }, [reviewId]);
 
   if (!reviewDetail) {
     return <div>Loading...</div>;
@@ -108,7 +105,6 @@ const ReviewDetail = styled.div`
   font-family: "KoddiUDOnGothic-Regular";
 
   .review-detail-feed-box {
-    display: flex;
     display: flex;
     flex-direction: column;
     align-items: center;

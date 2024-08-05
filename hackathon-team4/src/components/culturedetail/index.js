@@ -13,11 +13,13 @@ const CultureDetail = () => {
   const [cultureData, setCultureData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+  const [summary, setSummary] = useState("");
+  const [isInterested, setIsInterested] = useState(false);
 
   useEffect(() => {
     const fetchCultureDetail = async () => {
       try {
-        const response = await api.get("/cultures/" + cultureId);
+        const response = await api.get("/api/cultures/" + cultureId);
         console.log("Response:", response.data);
         setCultureData(response.data);
       } catch (error) {
@@ -25,6 +27,23 @@ const CultureDetail = () => {
       }
     };
     fetchCultureDetail();
+  }, [cultureId]);
+
+  useEffect(() => {
+    const fetchSummary = async () => {
+      try {
+        const response = await api.get("/api/cultures");
+        const culture = response.data.content.find(
+          (culture) => culture.cultureId === parseInt(cultureId)
+        );
+        if (culture) {
+          setSummary(culture.summary);
+        }
+      } catch (error) {
+        console.error("Failed to fetch summary", error);
+      }
+    };
+    fetchSummary();
   }, [cultureId]);
 
   useEffect(() => {
@@ -46,6 +65,38 @@ const CultureDetail = () => {
 
   const handleCreateReviewClick = () => {};
 
+  const handleInterestToggle = async () => {
+    const token = localStorage.getItem("accessToken");
+    try {
+      const response = await api.put(
+        `/api/cultures/${cultureId}/interests`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.data.message === "관심 문화 추가 성공") {
+        setCultureData((prevData) => ({
+          ...prevData,
+          interestCount: prevData.interestCount + 1,
+        }));
+        setIsInterested(true);
+      } else if (response.data.message === "관심 문화 삭제 성공") {
+        setCultureData((prevData) => ({
+          ...prevData,
+          interestCount: prevData.interestCount - 1,
+        }));
+        setIsInterested(false);
+      }
+    } catch (error) {
+      console.error(
+        "Failed to toggle interest",
+        error.response || error.message
+      );
+    }
+  };
   if (!cultureData) {
     return <div>Loading...</div>;
   }
@@ -65,14 +116,16 @@ const CultureDetail = () => {
 
           <div className="culture-top-right">
             <div className="location">{cultureData.regionName}</div>
-            <div className="challenge">{cultureData.summary}</div>
+            <div className="challenge">{summary}</div>
             <div className="member">
               추천인원: {cultureData.recommendedMember}
             </div>
             <span className="likes-num">
               관심 수 {cultureData.interestCount}
             </span>
-            <button className="likes-btn">관심</button>
+            <button className="likes-btn" onClick={handleInterestToggle}>
+              {isInterested ? "관심 취소" : "관심"}
+            </button>
           </div>
         </div>
       </div>

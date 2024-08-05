@@ -12,7 +12,6 @@ const CultureInfo = ({ cultureData }) => {
   return (
     <InfoContainer>
       <h2>{cultureData.name}</h2>
-      <p>{cultureData.summary}</p>
       <p>{cultureData.content}</p>
     </InfoContainer>
   );
