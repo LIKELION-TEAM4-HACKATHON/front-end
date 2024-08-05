@@ -26,17 +26,16 @@ const Card = styled.div`
   background-color: #fff;
   overflow: hidden;
   padding: 20px;
+  height: 430px;
   border-radius: 20px;
+  margin: 0 10px;
+  margin-bottom: 10px;
   box-shadow: 2px 4px 14.2px 0px rgba(0, 0, 0, 0.14);
-  width: 303px;
-  height: 410px;
-  margin-left: 45px;
-  margin-bottom: 45px;
   text-align: center;
   cursor: pointer;
 
   img {
-    width: 275px;
+    width: 100%;
     height: 223.222px;
     border-radius: 12px;
   }
@@ -54,9 +53,12 @@ const Card = styled.div`
     font-family: "KoddiUDOnGothic-Regular";
     font-size: 18.727px;
     margin: 10px 0;
+    text-align: left;
   }
 
   .region {
+    display: flex;
+    justify-content: end;
     color: #7c7c7c;
     font-family: "KoddiUDOnGothic-Regular";
     font-size: 16px;
@@ -65,7 +67,7 @@ const Card = styled.div`
 
   .culture-card-footer {
     display: flex;
-    justify-content: flex-start;
+    justify-content: flex-end;
     margin-top: 20px;
     font-family: "KoddiUDOnGothic-Regular";
     font-size: 15px;
@@ -78,17 +80,16 @@ const Card = styled.div`
       background-color: #df2525;
       border-radius: 5px;
       padding: 5px 10px;
-      margin-left: auto;
+      margin-left: 10px;
+      border: 1px solid #e02525;
     }
     .chat {
       color: #e02525;
       background-color: #fff;
       border-radius: 5px;
       padding: 5px 10px;
-      margin-left: 20px;
-      border-width: 2px;
-      border-color: #e02525;
-      border-style: solid;
+      margin-left: 10px;
+      border: 1.5px solid #e02525;
     }
   }
 `;

@@ -5,11 +5,10 @@ const Menu = styled.ul`
   display: flex;
   list-style: none;
   padding: 0;
-  margin: 20px 0;
   flex-direction: column;
 
   li {
-    margin: 10px;
+    margin: 5px;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
@@ -35,10 +34,16 @@ const hashtags = [
   { id: 5, name: "배움" },
 ];
 
-const CategoryMenu = ({ onCategoryChange, selectedCategory }) => {
+const interesttags = [
+  { id: 0, name: "전체" },
+];
+
+const CategoryMenu = ({ onCategoryChange, selectedCategory, showInterest }) => {
+  const categories = showInterest ? interesttags : hashtags;
+
   return (
     <Menu>
-      {hashtags.map((category) => (
+      {categories.map((category) => (
         <li
           key={category.id}
           onClick={() => onCategoryChange(category.id)}

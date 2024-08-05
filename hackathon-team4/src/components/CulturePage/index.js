@@ -97,16 +97,22 @@ const CulturePage = () => {
         </button>
       </div>
       {showInterest ? (
-        <InterestSection>
-          <CultureList cultures={interestCultures} />{" "}
-          {/* 나의 관심 문화 리스트 표시 */}
-        </InterestSection>
+        <CategorySection>
+        <div className="culture-category-box">
+          <CategoryMenu showInterest={true}
+          />
+        </div>
+        <div className="culture-list-box">
+          <CultureList cultures={interestCultures} />
+        </div>
+      </CategorySection>
       ) : (
         <CategorySection>
           <div className="culture-category-box">
             <CategoryMenu
               onCategoryChange={handleCategoryChange}
               selectedCategory={category}
+              showInterest={false}
             />
           </div>
           <div className="culture-list-box">
@@ -178,18 +184,23 @@ const CulturePageContainer = styled.div`
   }
 
   .my-interest-culture {
+    margin: 0 100px;
+    margin-top: 30px;
     font-size: 24px;
     font-weight: bold;
-    margin: 20px 20%;
     display: flex;
     justify-content: flex-end;
 
     button {
+        font-family: GmarketSans;
+      background-image: linear-gradient(94deg, #e02525 -14.69%, #7a1414 99.86%);
       padding: 10px 20px;
-      background-color: #f8f9fa;
+    border-radius: 6.529px;
+      background-color: #df2525;
       border: none;
       cursor: pointer;
       color: #df2525;
+      color: white;
       font-size: 22.929px;
     }
   }
@@ -198,27 +209,20 @@ const CulturePageContainer = styled.div`
 const CategorySection = styled.div`
   display: flex;
   flex-direction: row;
-  margin: 40px 30px;
+  margin: 30px 40px;
 
   .culture-category-box {
-    width: 170px;
+    padding: 10px;
+    width: 200px;
+    max-width: 200px;
+    min-width: 200px;
     height: 430px;
     border-radius: 20px;
     background: #fff;
     box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.25) inset;
   }
   .culture-list-box {
-    padding: 0px 100px;
-  }
-`;
-
-const InterestSection = styled.div`
-  margin: 40px 30px;
-
-  .interest-title {
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 20px;
+    padding: 0px 30px;
   }
 `;
 

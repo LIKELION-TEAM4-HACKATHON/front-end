@@ -5,7 +5,7 @@ import CultureCard from "./CultureCard";
 const List = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  gap: 10px;
 `;
 
 const CultureList = ({ cultures }) => {
