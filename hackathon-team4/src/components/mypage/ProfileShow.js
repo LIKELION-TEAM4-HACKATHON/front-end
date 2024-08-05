@@ -2,10 +2,6 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const api = axios.create({
-  baseURL: "/api",
-});
-
 const ProfilShowSection = styled.section`
   width: 100%;
   height: auto;
@@ -110,11 +106,14 @@ const ProfileShow = () => {
 
         console.log("Token found:", token);
 
-        const response = await api.get("/users/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          "http://3.37.154.200:8080/api/users/me",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         console.log("Profile data fetched:", response.data);
 

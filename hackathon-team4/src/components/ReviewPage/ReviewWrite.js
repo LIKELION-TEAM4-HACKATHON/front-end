@@ -1,11 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
+import { useParams } from "react-router-dom";
 
 const ReviewWrite = () => {
+  const { cultureId } = useParams();
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [images, setImages] = useState([]);
+  const [cultureName, setCultureName] = useState("");
+
+  useEffect(() => {
+    const fetchCultureName = async () => {
+      try {
+        const response = await axios.get(
+          `http://3.37.154.200:8080/api/cultures/${cultureId}`
+        );
+        setCultureName(response.data.name);
+      } catch (error) {
+        console.error("Failed to fetch culture name", error);
+      }
+    };
+
+    fetchCultureName();
+  }, [cultureId]);
 
   const handleImageChange = (e) => {
     setImages([...images, ...e.target.files]);
@@ -19,13 +37,13 @@ const ReviewWrite = () => {
     });
 
     try {
+      const token = localStorage.getItem("accessToken");
       const response = await axios.post(
-        "http://3.37.154.200:8080/api/reviews/culture/{cultureId}",
+        `http://3.37.154.200:8080/api/reviews/culture/${cultureId}`,
         formData,
         {
           headers: {
-            Authorization:
-              "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0MkB0ZXN0Lm",
+            Authorization: `Bearer ${token}`,
             "Content-Type": "multipart/form-data",
           },
         }
@@ -46,11 +64,11 @@ const ReviewWrite = () => {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
         />
-        <div className="review-write-type">{"탕후루 만들기"}</div>
+        <div className="review-write-type">{cultureName}</div>
         <div className="review-write-image-upload-box">
           <img
             className="review-image-upload-logo"
-            src="images/Vector.png"
+            src="/images/Vector.png"
             alt="사진 업로드 로고"
           />
           <input
@@ -73,7 +91,6 @@ const ReviewWrite = () => {
     </ReviewWriteContainer>
   );
 };
-
 const ReviewWriteContainer = styled.div`
   display: flex;
   justify-content: center;

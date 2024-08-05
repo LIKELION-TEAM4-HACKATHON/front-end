@@ -11,16 +11,17 @@ const InfoContainer = styled.div`
 `;
 
 const Content = styled.div`
+  padding: 20px;
   .culture-title {
-    font-size: 30px;
-    font-weight: bold;
+    color: white;
+    font-size: 33px;
     margin-top: 10px;
     margin-bottom: 30px;
     margin-left: 0px;
-    background-color: #df2525;
+    background: #df2525;
     color: white;
-    padding: 10px;
   }
+
   .culture-content {
     font-size: 20px;
     font-weight: bold;

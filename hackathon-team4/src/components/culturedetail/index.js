@@ -4,7 +4,7 @@ import axios from "axios";
 import CultureInfo from "./CultureInfo";
 import CultureMeet from "./CultureMeet";
 import CultureReview from "./CultureReview";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import Make from "../makeClub/Make";
 
 const CultureDetail = () => {
@@ -67,13 +67,11 @@ const CultureDetail = () => {
     setIsModalOpen(false);
   };
 
-  const handleCreateReviewClick = () => {};
-
   const handleInterestToggle = async () => {
     const token = localStorage.getItem("accessToken");
     try {
       const response = await axios.put(
-        `http://3.37.154.200:8080/api/cultures/${cultureId}/interests`,
+        `/api/cultures/${cultureId}/interests`,
         {},
         {
           headers: {
@@ -161,9 +159,9 @@ const CultureDetail = () => {
             </CreateButton>
           )}
           {activeTab === "review" && isUserLoggedIn && (
-            <CreateButton onClick={handleCreateReviewClick}>
-              후기 작성
-            </CreateButton>
+            <Link to={`/reviewWrite/${cultureId}`}>
+              <CreateButton>후기 작성</CreateButton>
+            </Link>
           )}
         </div>
 
@@ -196,7 +194,7 @@ const CultureDetailSection = styled.section`
   }
 
   .culture-top-container {
-    width: 1000px;
+    width: 1100px;
     height: 421.681px;
     display: flex;
     justify-content: center;
@@ -209,13 +207,13 @@ const CultureDetailSection = styled.section`
   }
 
   .culture-top-left {
-    width: 420px;
+    width: 440px;
   }
 
   .culture-top-right {
     padding-right: 30px;
     text-align: right;
-    width: 500px;
+    width: 560px;
   }
 
   .culture-title {
@@ -246,7 +244,7 @@ const CultureDetailSection = styled.section`
   }
 
   .member {
-    margin-top: 70px;
+    margin-top: 37px;
     margin-bottom: 70px;
     color: #000;
     text-align: right;
@@ -255,26 +253,28 @@ const CultureDetailSection = styled.section`
   }
 
   .likes-num {
-    padding: 7px 16px;
-    background-color: #e74c3c;
-    margin-right: 20px;
-    color: #fff;
-    border-radius: 10px;
     font-size: 27.711px;
+    color: #fff;
+    background-color: #df2525;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-left: 10px;
+    border: 1px solid #e02525;
   }
 
   .likes-btn {
-    padding: 7px 20px;
-    border: 2px solid #e74c3c;
-    border-radius: 10px;
+    font-size: 27.711px;
+    color: #e02525;
     background-color: #fff;
-    color: #e74c3c;
+    border-radius: 5px;
+    padding: 5px 10px;
+    margin-left: 10px;
+    border: 1.5px solid #e02525;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
-    font-size: 27.711px;
 
     &:hover {
-      background-color: #e74c3c;
+      background-color: #e02525;
       color: #fff;
     }
   }

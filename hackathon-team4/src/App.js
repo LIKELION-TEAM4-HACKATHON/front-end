@@ -33,7 +33,7 @@ const App = () => {
           </Route>
           <Route path="/review" element={<ReviewPage />} />
           <Route path="/reviews/:reviewId" element={<ReviewDetail />} />
-          <Route path="/reviewWrite" element={<ReviewWrite />} />
+          <Route path="/reviewWrite/:cultureId" element={<ReviewWrite />} />
         </Route>
       </Routes>
     </BrowserRouter>

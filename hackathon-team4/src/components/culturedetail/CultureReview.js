@@ -1,45 +1,48 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const CultureReview = ({ reviews }) => {
   return (
     <ReviewContainer>
       {reviews.map((review) => (
-        <ReviewListItem key={review.reviewId}>
-          <div className="review-list-item-box">
-            <div className="review-list-profile">
+        <StyledLink to={`/reviews/${review.reviewId}`} key={review.reviewId}>
+          <ReviewListItem>
+            <div className="review-list-item-box">
+              <div className="review-list-profile">
+                <div
+                  className="review-list-profile-image"
+                  style={{
+                    backgroundImage: `url(${review.reviewer.profileImageUrl})`,
+                  }}
+                ></div>
+                <div className="review-list-profile-nickname">
+                  {review.reviewer.username}
+                </div>
+              </div>
+              <div className="review-list-content">
+                <div className="review-list-title">{review.title}</div>
+                <div className="review-list-type">{review.cultureName}</div>
+                <div className="review-list-counts">
+                  <div className="review-list-likes">
+                    좋아요 {review.likeCount}
+                  </div>
+                  <div className="review-list-comments">
+                    댓글 {review.commentCount}
+                  </div>
+                </div>
+              </div>
+              <div className="review-list-date">
+                <div>작성일</div>
+                <div>{new Date(review.createdDate).toLocaleDateString()}</div>
+              </div>
               <div
-                className="review-list-profile-image"
-                style={{
-                  backgroundImage: `url(${review.reviewer.profileImage})`,
-                }}
+                className="review-list-image"
+                style={{ backgroundImage: `url(${review.reviewImageUrl})` }}
               ></div>
-              <div className="review-list-profile-nickname">
-                {review.reviewer.username}
-              </div>
             </div>
-            <div className="review-list-content">
-              <div className="review-list-title">{review.title}</div>
-              <div className="review-list-type">{review.cultureName}</div>
-              <div className="review-list-counts">
-                <div className="review-list-likes">
-                  좋아요 {review.likeCount}
-                </div>
-                <div className="review-list-comments">
-                  댓글 {review.commentCount}
-                </div>
-              </div>
-            </div>
-            <div className="review-list-date">
-              <div>작성일</div>
-              <div>{new Date(review.createdDate).toLocaleDateString()}</div>
-            </div>
-            <div
-              className="review-list-image"
-              style={{ backgroundImage: `url(${review.reviewImageUrl})` }}
-            ></div>
-          </div>
-        </ReviewListItem>
+          </ReviewListItem>
+        </StyledLink>
       ))}
     </ReviewContainer>
   );
@@ -61,20 +64,19 @@ const ReviewListItem = styled.div`
   box-shadow: 0 2px 10.796px 0px rgba(0, 0, 0, 0.25);
   cursor: pointer;
   margin-bottom: 20px;
-  width: 90%;
+  width: 1800px;
 
   .review-list-item-box {
     display: flex;
     align-items: center;
-    width: 1553px;
-    height: 183.204px;
+    width: 1400px;
+    height: 200px;
   }
 
   .review-list-profile {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-right: 16px;
     width: 457px;
     height: 143.462px;
   }
@@ -101,7 +103,7 @@ const ReviewListItem = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 30px 100px;
+    padding: 30px 0px;
     gap: 10px;
   }
 
@@ -159,7 +161,16 @@ const ReviewListItem = styled.div`
     background-size: cover;
     background-position: center;
     flex-direction: column;
+    margin-left: 10px;
   }
 `;
 
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
+
+  &:hover {
+    color: #007bff;
+  }
+`;
 export default CultureReview;

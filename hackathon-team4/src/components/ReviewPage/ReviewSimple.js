@@ -55,7 +55,7 @@ const ReviewPage = () => {
         {reviews &&
           reviews.map((review) => (
             <ReviewListItem key={review.reviewId}>
-              <Link to={`/reviews/${review.reviewId}`}>
+              <StyledLink to={`/reviews/${review.reviewId}`}>
                 <div className="review-list-item-box">
                   <div className="review-list-profile">
                     <div
@@ -91,25 +91,25 @@ const ReviewPage = () => {
                     style={{ backgroundImage: `url(${review.reviewImageUrl})` }}
                   ></div>
                 </div>
-              </Link>
+              </StyledLink>
             </ReviewListItem>
           ))}
       </ReviewsContainer>
 
       <Pagination>
-        <button
+        <img
+          src="images/back-button.png"
+          alt="back-button"
           onClick={() => handlePageChange(page - 1)}
           disabled={page === 0}
-        >
-          &lt;
-        </button>
-        <span>{page + 1}</span>
-        <button
+        />
+        <div className="pageNumBox">{page + 1}</div>
+        <img
+          src="images/next-button.png"
+          alt="next-button"
           onClick={() => handlePageChange(page + 1)}
           disabled={page + 1 >= totalPages}
-        >
-          &gt;
-        </button>
+        />
       </Pagination>
     </ReviewsPage>
   );
@@ -123,7 +123,8 @@ const ReviewsPage = styled.div`
 `;
 
 const SearchContainer = styled.div`
-  margin-bottom: 20px;
+  margin-bottom: 50px;
+  margin-top: 30px;
   text-align: center;
 
   input {
@@ -153,22 +154,25 @@ const Pagination = styled.div`
   align-items: center;
   margin-top: 20px;
 
-  button {
-    padding: 10px;
-    margin: 0 5px;
-    border: 1px solid #ccc;
-    background-color: #fff;
-    cursor: pointer;
+  .pageNumBox {
+    width: 47px;
+    height: 47px;
+    margin: 0 36px;
     border-radius: 4px;
-
-    &:disabled {
-      cursor: not-allowed;
-      opacity: 0.5;
-    }
+    color: #7c7c7c;
+    text-align: center;
+    font-family: GmarketSans;
+    font-size: 38px;
+    font-weight: 500;
+    line-height: 1.4;
   }
+`;
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
 
-  span {
-    padding: 10px;
+  &:hover {
+    color: #007bff;
   }
 `;
 
@@ -180,20 +184,19 @@ const ReviewListItem = styled.div`
   box-shadow: 0 2px 10.796px 0px rgba(0, 0, 0, 0.25);
   cursor: pointer;
   margin-bottom: 20px;
-  width: 90%;
+  width: 1800px;
 
   .review-list-item-box {
     display: flex;
     align-items: center;
-    width: 1553px;
-    height: 183.204px;
+    width: 1400px;
+    height: 200px;
   }
 
   .review-list-profile {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-right: 16px;
     width: 457px;
     height: 143.462px;
   }
@@ -220,7 +223,7 @@ const ReviewListItem = styled.div`
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: 30px 100px;
+    padding: 30px 0px;
     gap: 10px;
   }
 
@@ -278,6 +281,7 @@ const ReviewListItem = styled.div`
     background-size: cover;
     background-position: center;
     flex-direction: column;
+    margin-left: 10px;
   }
 `;
 

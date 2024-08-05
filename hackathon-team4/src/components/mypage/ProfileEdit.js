@@ -2,10 +2,6 @@ import styled from "styled-components";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-const api = axios.create({
-  baseURL: "/api",
-});
-
 const ProfileEditSection = styled.section`
   width: 100%;
   height: auto;
@@ -208,11 +204,14 @@ const ProfileEdit = () => {
           throw new Error("No token found");
         }
 
-        const response = await api.get("/users/me", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await axios.get(
+          "http://3.37.154.200:8080/api/users/me",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         console.log("Fetched data:", response.data);
 
@@ -264,7 +263,7 @@ const ProfileEdit = () => {
       console.log("Sending data:", requestData);
 
       // Update profile information
-      await api.put("/users/me", requestData, {
+      await axios.put("http://3.37.154.200:8080/api/users/me", requestData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -279,8 +278,8 @@ const ProfileEdit = () => {
 
         console.log("Sending image:", selectedFile);
 
-        const imageUploadResponse = await api.post(
-          "/users/me/image",
+        const imageUploadResponse = await axios.post(
+          "http://3.37.154.200:8080/api/users/me/image",
           imageFormData,
           {
             headers: {
@@ -304,11 +303,14 @@ const ProfileEdit = () => {
       }
 
       // Fetch updated profile data
-      const updatedProfileData = await api.get("/users/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const updatedProfileData = await axios.get(
+        "http://3.37.154.200:8080/api/users/me",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       console.log("Updated profile data:", updatedProfileData.data);
 

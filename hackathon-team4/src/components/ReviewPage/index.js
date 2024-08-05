@@ -111,6 +111,7 @@ const ReviewPage = () => {
               alt="리뷰 이미지"
             />
           </div>
+          <div className="review-detail-content">{reviewDetail.content}</div>
           <div className="review-detail-item-bottom">
             <div className="review-detail-date">
               작성일 {new Date(reviewDetail.createdDate).toLocaleDateString()}
@@ -144,7 +145,7 @@ const ReviewPage = () => {
               >
                 <img
                   className="review-comment-profile-image"
-                  src={comment.commenter.profileImage}
+                  src={comment.commenter.profileImageUrl}
                   alt="프로필 이미지"
                 />
                 <div className="review-comment-profile-nickname">
@@ -192,7 +193,7 @@ const ReviewDetail = styled.div`
 
   .review-detail-item-box {
     width: 1004.092px;
-    height: 1100.055px;
+    height: auto;
     background: #fff;
     border-radius: 15px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -200,7 +201,7 @@ const ReviewDetail = styled.div`
   }
 
   .review-detail-item-top {
-    padding: 15px 0px 0px 70px;
+    padding: 15px 60px 0px 70px;
     height: auto;
     display: flex;
     flex-direction: column;
@@ -209,7 +210,7 @@ const ReviewDetail = styled.div`
     width: 800;
 
     .review-detail-title {
-      font-size: 60px;
+      font-size: 50px;
       font-weight: 700;
       color: #e02525;
       margin-top: 20px;
@@ -217,20 +218,20 @@ const ReviewDetail = styled.div`
     .review-detail-type-nickname {
       display: flex;
       gap: 10px;
-      margin-top: 15px;
+      margin: 30px 0px 1px 0px;
     }
 
     .review-detail-type {
       color: #7c7c7c;
-      font-size: 36.318px;
+      font-size: 40px;
       margin-bottom: 10px;
     }
 
     .review-detail-nickname {
       color: #000;
-      text-align: center;
+      text-align: right;
       font-size: 40px;
-      margin-left: 40px;
+      margin-left: 150px;
     }
   }
 
@@ -246,13 +247,19 @@ const ReviewDetail = styled.div`
     }
   }
 
+  .review-detail-content {
+    width: 862px;
+    height: auto;
+    padding: 0px 40px 0px 70px;
+    font-size: 28px;
+    margin: 20px 0px;
+  }
+
   .review-detail-item-bottom {
     display: flex;
     justify-content: space-between;
-    font-size: 16px;
-    color: #7c7c7c;
     padding: 15px 70px 0px 70px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     width: 800;
 
     .review-detail-date {
@@ -265,22 +272,22 @@ const ReviewDetail = styled.div`
 
       .review-detail-likes {
         font-size: 24px;
-        color: #e02525;
-        background-color: #e74c3c;
-        border-radius: 4px;
         color: #fff;
-        padding: 10px;
+        background-color: #df2525;
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin-left: 10px;
+        border: 1px solid #e02525;
       }
 
       .review-detail-comments {
         font-size: 24px;
-        border-width: 0.766px;
+        color: #e02525;
         background-color: #fff;
-        border-radius: 4px;
-        border-color: #e74c3c;
-        border-style: solid;
-        color: #df2525;
-        padding: 10px;
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin-left: 10px;
+        border: 1.5px solid #e02525;
       }
     }
   }
@@ -297,21 +304,19 @@ const ReviewDetail = styled.div`
   .review-comment-top {
     display: flex;
     justify-content: flex-end;
-    margin-bottom: 10px;
+    margin: 10px;
 
     .review-comment-like-btn {
+      font-family: GmarketSans;
+      background-image: linear-gradient(94deg, #e02525 -14.69%, #7a1414 99.86%);
       padding: 10px 20px;
-      border: 2px solid #e74c3c;
-      background-color: #fceeec;
-      color: #e74c3c;
-      border-radius: 10px;
-      font-size: 24.537px;
-      transition: background-color 0.3s, color 0.3s;
+      border-radius: 6.529px;
+      border: none;
       cursor: pointer;
+      color: #fff;
+      font-size: 25px;
 
       &:hover {
-        background-color: #e74c3c;
-        color: #fff;
       }
     }
   }
@@ -333,25 +338,26 @@ const ReviewDetail = styled.div`
     .review-comment-profile-image {
       width: 65px;
       height: 65px;
-      border-radius: 50%;
+      border-radius: 70%;
     }
 
     .review-comment-profile-nickname {
       font-weight: bold;
       margin-right: 10px;
       font-size: 27.331px;
+      width: 60px;
     }
   }
   .review-comment {
     display: block;
     font-size: 24px;
     background: white;
-    padding: 10px;
     border-radius: 5px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     width: 800px;
     height: auto;
-    padding: 20px 40px 20px 40px;
+    min-height: 30px;
+    padding: 20px 30px;
   }
 
   //댓글 작성하기
@@ -362,7 +368,7 @@ const ReviewDetail = styled.div`
 
     .review-comment-write-form {
       flex: 1;
-      padding: 20px;
+      padding: 10px;
       border-radius: 20px;
       border: 1px solid #ccc;
       resize: none;
@@ -373,11 +379,12 @@ const ReviewDetail = styled.div`
 
     .review-comment-write-upload {
       padding: 20px;
-      background-color: #e74c3c;
-      color: white;
-      border: none;
+      font-family: GmarketSans;
+      background-image: linear-gradient(94deg, #e02525 -14.69%, #7a1414 99.86%);
       border-radius: 20px;
+      border: none;
       cursor: pointer;
+      color: #fff;
       font-size: 24px;
     }
   }

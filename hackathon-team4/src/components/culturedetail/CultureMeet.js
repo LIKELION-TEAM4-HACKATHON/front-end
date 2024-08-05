@@ -1,45 +1,52 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const CultureMeet = ({ clubs }) => {
   return (
     <MeetContainer>
       {clubs.map((club) => (
-        <MeetCard key={club.clubId}>
-          <div className="chat">
-            <div className="popular-chat-content">
-              <div className="chat-title-box">
-                <img
-                  className="profile-img"
-                  src={club.leaderProfileImageUrl}
-                  alt="프로필 이미지"
-                />
-                <div className="chat-title">{club.cultureName} 모임</div>
-              </div>
-              <div className="region">{club.regionName}</div>
-              <div className="category">{club.title}</div>
-              <button
-                className="due-date"
-                onClick={() => {
-                  /*여기에 모임링크*/
-                }}
-              >
-                {new Date(club.meetingDate).toLocaleDateString()} 모임
-              </button>
-              <div className="hashtags-box">
-                <div className="hashtags-left">
-                  <span className="hashtag">#{club.genderRestriction}</span>
-                  <span className="hashtag">#{club.ageRestriction}</span>
+        <Link
+          to={`/clubs/${club.clubId}`}
+          key={club.clubId}
+          style={{ textDecoration: "none" }}
+        >
+          <MeetCard>
+            <div className="chat">
+              <div className="popular-chat-content">
+                <div className="chat-title-box">
+                  <img
+                    className="profile-img"
+                    src={club.leaderProfileImageUrl}
+                    alt="프로필 이미지"
+                  />
+                  <div className="chat-title">{club.cultureName} 모임</div>
                 </div>
-                <div className="hashtags-right">
-                  <span className="limit">
-                    {club.currentParticipant}/{club.maxParticipant}
-                  </span>
+                <div className="region">{club.regionName}</div>
+                <div className="category">{club.title}</div>
+                <button
+                  className="due-date"
+                  onClick={(e) => {
+                    e.preventDefault(); // Prevent the button from stopping the link navigation
+                  }}
+                >
+                  {new Date(club.meetingDate).toLocaleDateString()} 모임
+                </button>
+                <div className="hashtags-box">
+                  <div className="hashtags-left">
+                    <span className="hashtag">#{club.genderRestriction}</span>
+                    <span className="hashtag">#{club.ageRestriction}</span>
+                  </div>
+                  <div className="hashtags-right">
+                    <span className="limit">
+                      {club.currentParticipant}/{club.maxParticipant}
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </MeetCard>
+          </MeetCard>
+        </Link>
       ))}
     </MeetContainer>
   );
