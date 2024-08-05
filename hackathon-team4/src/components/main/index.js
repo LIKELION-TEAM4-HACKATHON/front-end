@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import api from "../../api";
+import axios from "axios";
 
 const Arrow = ({ onClick, direction, src }) => (
   <div
@@ -24,7 +24,7 @@ const Main = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get("/api/main");
+        const response = await axios.get("http://3.37.154.200:8080/api/main");
         setPopularCultures(response.data.popularCultures.slice(0, 4));
         setPopularReviews(response.data.popularReviews.slice(0, 1));
         setRecentClubs(response.data.recentClubs.slice(0, 2));

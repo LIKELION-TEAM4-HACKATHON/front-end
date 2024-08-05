@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
-import api from "../../api";
+import axios from "axios";
 
 const Btn = styled.button`
   width: 100%;
@@ -28,8 +28,8 @@ const LoginBtn = ({ email, pw, setEmail, setPw, onSuccess }) => {
 
   const logout = async () => {
     try {
-      const response = await api.post(
-        "/api/auth/logout",
+      const response = await axios.post(
+        "http://3.37.154.200:8080/api/auth/logout",
         {},
         {
           headers: {
@@ -51,10 +51,13 @@ const LoginBtn = ({ email, pw, setEmail, setPw, onSuccess }) => {
 
   const onClickBtn = async () => {
     try {
-      const response = await api.post("/api/auth/login", {
-        email,
-        password: pw,
-      });
+      const response = await axios.post(
+        "http://3.37.154.200:8080/api/auth/login",
+        {
+          email,
+          password: pw,
+        }
+      );
       if (response.data) {
         console.log("로그인 성공:", response.data);
         localStorage.setItem("accessToken", response.data.accessToken.token);

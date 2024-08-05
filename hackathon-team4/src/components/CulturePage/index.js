@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import CategoryMenu from "./CategoryMenu";
 import CultureList from "./CultureList";
-import api from "../../api";
+import axios from "axios";
 
 const CulturePage = () => {
   const [allCultures, setAllCultures] = useState([]);
@@ -29,7 +29,12 @@ const CulturePage = () => {
         params.category = category;
       }
 
-      const response = await api.get("/api/cultures", { params });
+      const response = await axios.get(
+        "http://3.37.154.200:8080/api/cultures",
+        {
+          params,
+        }
+      );
       setAllCultures(response.data.content);
       setCultures(response.data.content);
     } catch (error) {
@@ -44,15 +49,18 @@ const CulturePage = () => {
         throw new Error("No token found");
       }
 
-      const response = await api.get("/api/cultures/interest", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        params: {
-          category: category !== "전체" ? category : undefined,
-          page: pageNum - 1,
-        },
-      });
+      const response = await axios.get(
+        "http://3.37.154.200:8080/api/cultures/interest",
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          params: {
+            category: category !== "전체" ? category : undefined,
+            page: pageNum - 1,
+          },
+        }
+      );
       setInterestCultures(response.data.content);
     } catch (error) {
       console.error("Failed to fetch interest cultures", error);
