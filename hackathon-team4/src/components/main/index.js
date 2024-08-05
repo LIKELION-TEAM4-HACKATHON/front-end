@@ -102,7 +102,7 @@ const Main = () => {
                 <div className="count">
                   <div className="like-count">좋아요 {review.likeCount}</div>
                   <div className="chat-count">댓글 {review.commentCount}</div>
-              </div>
+                </div>
               </div>
               <div className="review-image-box">
                 <img src={review.reviewImageUrl} alt={review.title} />
@@ -114,7 +114,7 @@ const Main = () => {
           ))}
         </div>
       </div>
-      <div className="popular1">인기 모임</div>
+      <div className="popular1">마감 임박 모임</div>
       <div className="chat">
         {recentClubs.map((club) => (
           <PopularChat key={club.clubId}>
@@ -263,6 +263,7 @@ const MainSection = styled.div`
     height: 24px;
     background-color: #e02525;
     color: white;
+    border: 1px solid #e02525;
     border-radius: 8px;
     display: flex;
     justify-content: center;
@@ -351,8 +352,9 @@ const PopularReview = styled.div`
   width: 580px;
   border-radius: 20px;
   background: #fff;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 30px 40px; 
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset,
+    0px 4px 14.1px 0px rgba(0, 0, 0, 0.25);
+  padding: 30px 40px;
   position: relative;
 
   .review-text-content {
@@ -392,6 +394,7 @@ const PopularReview = styled.div`
     font-family: KoddiUDOnGothic-Regular;
     font-size: 18.727px;
     margin-top: 10px;
+    margin-bottom: 80px;
   }
 
   .review-image-box {
@@ -426,7 +429,8 @@ const PopularChat = styled.div`
   height: 167px;
   border-radius: 20px;
   background: #fff;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25) inset,
+    0px 4px 14.1px 0px rgba(0, 0, 0, 0.25);
   padding: 20px;
   position: relative;
 
@@ -467,7 +471,6 @@ const PopularChat = styled.div`
     color: #e02525;
     font-family: KoddiUDOnGothic-Bold;
     font-size: 24.023px;
-
   }
 
   .due-date {
