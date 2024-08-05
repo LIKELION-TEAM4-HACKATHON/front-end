@@ -29,7 +29,7 @@ const LoginBtn = ({ email, pw, setEmail, setPw, onSuccess }) => {
   const logout = async () => {
     try {
       const response = await api.post(
-        "/auth/logout",
+        "/api/auth/logout",
         {},
         {
           headers: {
@@ -51,7 +51,10 @@ const LoginBtn = ({ email, pw, setEmail, setPw, onSuccess }) => {
 
   const onClickBtn = async () => {
     try {
-      const response = await api.post("/auth/login", { email, password: pw });
+      const response = await api.post("/api/auth/login", {
+        email,
+        password: pw,
+      });
       if (response.data) {
         console.log("로그인 성공:", response.data);
         localStorage.setItem("accessToken", response.data.accessToken.token);

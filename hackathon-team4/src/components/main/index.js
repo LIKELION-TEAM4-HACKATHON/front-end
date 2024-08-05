@@ -24,7 +24,7 @@ const Main = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await api.get("/main");
+        const response = await api.get("/api/main");
         setPopularCultures(response.data.popularCultures.slice(0, 4));
         setPopularReviews(response.data.popularReviews.slice(0, 1));
         setRecentClubs(response.data.recentClubs.slice(0, 2));

@@ -1,10 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import axios from "axios";
-
-const api = axios.create({
-  baseURL: "/api",
-});
+import api from "../../api";
 
 const ReviewPage = () => {
   const [reviews, setReviews] = useState([]);
@@ -18,7 +14,7 @@ const ReviewPage = () => {
   const fetchReviews = async () => {
     try {
       const response = await api.get(
-        `/reviews?keyword=${searchTerm}&page=${page}`
+        `/api/reviews?keyword=${searchTerm}&page=${page}`
       );
       setReviews(response.data.reviews);
     } catch (error) {

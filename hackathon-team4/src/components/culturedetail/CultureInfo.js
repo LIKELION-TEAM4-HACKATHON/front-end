@@ -2,17 +2,32 @@ import React from "react";
 import styled from "styled-components";
 
 const InfoContainer = styled.div`
-  padding: 20px;
+  width: 70%;
+  padding: 30px;
   background-color: #f8f9fa;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 `;
 
+const Content = styled.div`
+  .culture-title {
+    font-size: 40px;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 30px;
+    color: #7c7c7c;
+  }
+  .culture-content {
+    font-size: 30px;
+    font-weight: bold;
+    line-height: 50px;
+  }
+`;
+
 const CultureInfo = ({ cultureData }) => {
   return (
     <InfoContainer>
-      <h2>{cultureData.name}</h2>
-      <p>{cultureData.content}</p>
+      <Content dangerouslySetInnerHTML={{ __html: cultureData.content }} />
     </InfoContainer>
   );
 };
