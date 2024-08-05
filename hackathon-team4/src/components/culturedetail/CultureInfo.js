@@ -18,7 +18,8 @@ const Content = styled.div`
     margin-bottom: 30px;
     margin-left: 0px;
     background-color: #df2525;
-    color: #fff;
+    color: white;
+    padding: 10px;
   }
   .culture-content {
     font-size: 20px;

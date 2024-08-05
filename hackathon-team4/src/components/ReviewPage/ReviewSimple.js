@@ -1,38 +1,44 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import api from "../../api";
+import { Link } from "react-router-dom";
+import axios from "axios";
 
 const ReviewPage = () => {
   const [reviews, setReviews] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [page, setPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
 
   useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const params = searchTerm
+          ? { keyword: searchTerm, page: page }
+          : { page: page };
+        const response = await axios.get(
+          "http://3.37.154.200:8080/api/reviews",
+          { params }
+        );
+        setReviews(response.data.content);
+        setTotalPages(response.data.totalPages);
+      } catch (error) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
+
     fetchReviews();
-  }, [page, searchTerm]);
+  }, [searchTerm, page]);
 
-  const fetchReviews = async () => {
-    try {
-      const response = await api.get(
-        `/api/reviews?keyword=${searchTerm}&page=${page}`
-      );
-      setReviews(response.data.reviews);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleSearchChange = (event) => {
-    setSearchTerm(event.target.value);
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+    setPage(0); // 검색어 변경 시 페이지를 0으로 초기화
   };
 
   const handlePageChange = (newPage) => {
-    setPage(newPage);
+    if (newPage >= 0 && newPage < totalPages) {
+      setPage(newPage);
+    }
   };
-
-  const filteredReviews = reviews
-    ? reviews.filter((review) => review.title.includes(searchTerm))
-    : [];
 
   return (
     <ReviewsPage>
@@ -46,43 +52,48 @@ const ReviewPage = () => {
       </SearchContainer>
 
       <ReviewsContainer>
-        {filteredReviews.map((review) => (
-          <ReviewListItem key={review.reviewId}>
-            <div className="review-list-item-box">
-              <div className="review-list-profile">
-                <div
-                  className="review-list-profile-image"
-                  style={{
-                    backgroundImage: `url(${review.reviewer.profileImageUrl})`,
-                  }}
-                ></div>
-                <div className="review-list-profile-nickname">
-                  {review.reviewer.username}
-                </div>
-              </div>
-              <div className="review-list-content">
-                <div className="review-list-title">{review.title}</div>
-                <div className="review-list-type">{review.cultureName}</div>
-                <div className="review-list-counts">
-                  <div className="review-list-likes">
-                    좋아요 {review.likeCount}
+        {reviews &&
+          reviews.map((review) => (
+            <ReviewListItem key={review.reviewId}>
+              <Link to={`/reviews/${review.reviewId}`}>
+                <div className="review-list-item-box">
+                  <div className="review-list-profile">
+                    <div
+                      className="review-list-profile-image"
+                      style={{
+                        backgroundImage: `url(${review.reviewer.profileImageUrl})`,
+                      }}
+                    ></div>
+                    <div className="review-list-profile-nickname">
+                      {review.reviewer.username}
+                    </div>
                   </div>
-                  <div className="review-list-comments">
-                    댓글 {review.commentCount}
+                  <div className="review-list-content">
+                    <div className="review-list-title">{review.title}</div>
+                    <div className="review-list-type">{review.cultureName}</div>
+                    <div className="review-list-counts">
+                      <div className="review-list-likes">
+                        좋아요 {review.likeCount}
+                      </div>
+                      <div className="review-list-comments">
+                        댓글 {review.commentCount}
+                      </div>
+                    </div>
                   </div>
+                  <div className="review-list-date">
+                    <div>작성일</div>
+                    <div>
+                      {new Date(review.createdDate).toLocaleDateString()}
+                    </div>
+                  </div>
+                  <div
+                    className="review-list-image"
+                    style={{ backgroundImage: `url(${review.reviewImageUrl})` }}
+                  ></div>
                 </div>
-              </div>
-              <div className="review-list-date">
-                <div>작성일</div>
-                <div>{new Date(review.createdDate).toLocaleDateString()}</div>
-              </div>
-              <div
-                className="review-list-image"
-                style={{ backgroundImage: `url(${review.reviewImageUrl})` }}
-              ></div>
-            </div>
-          </ReviewListItem>
-        ))}
+              </Link>
+            </ReviewListItem>
+          ))}
       </ReviewsContainer>
 
       <Pagination>
@@ -93,7 +104,12 @@ const ReviewPage = () => {
           &lt;
         </button>
         <span>{page + 1}</span>
-        <button onClick={() => handlePageChange(page + 1)}>&gt;</button>
+        <button
+          onClick={() => handlePageChange(page + 1)}
+          disabled={page + 1 >= totalPages}
+        >
+          &gt;
+        </button>
       </Pagination>
     </ReviewsPage>
   );

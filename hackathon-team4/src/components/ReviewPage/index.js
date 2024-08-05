@@ -1,18 +1,23 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
-import api from "../../api";
+import axios from "axios";
 
 const ReviewPage = () => {
   const { reviewId } = useParams();
   const [reviewDetail, setReviewDetail] = useState(null);
+  const [isLiked, setIsLiked] = useState(false);
+  const [newComment, setNewComment] = useState(""); // 새 댓글 입력 값 상태 추가
 
   useEffect(() => {
     const fetchReviewDetail = async () => {
       try {
-        const response = await api.get("/api/reviews/${reviewId}");
+        const response = await axios.get(
+          `http://3.37.154.200:8080/api/reviews/${reviewId}`
+        );
         console.log("Review detail fetched:", response.data);
         setReviewDetail(response.data);
+        setIsLiked(response.data.isLiked); // 서버로부터 좋아요 상태를 받아옴
       } catch (error) {
         console.error("Failed to fetch review detail", error);
       }
@@ -20,6 +25,65 @@ const ReviewPage = () => {
 
     fetchReviewDetail();
   }, [reviewId]);
+
+  const handleLikeToggle = async () => {
+    const token = localStorage.getItem("accessToken");
+    try {
+      const response = await axios.put(
+        `http://3.37.154.200:8080/api/reviews/${reviewId}/likes`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (response.data.message === "후기 좋아요 추가 성공") {
+        setReviewDetail((prevDetail) => ({
+          ...prevDetail,
+          likeCount: prevDetail.likeCount + 1,
+        }));
+        setIsLiked(true);
+      } else if (response.data.message === "후기 좋아요 삭제 성공") {
+        setReviewDetail((prevDetail) => ({
+          ...prevDetail,
+          likeCount: prevDetail.likeCount - 1,
+        }));
+        setIsLiked(false);
+      }
+    } catch (error) {
+      console.error("Failed to toggle like", error.response || error.message);
+    }
+  };
+
+  const handleCommentSubmit = async () => {
+    const token = localStorage.getItem("accessToken");
+    try {
+      const response = await axios.post(
+        `http://3.37.154.200:8080/api/reviews/${reviewId}/comments`,
+        {
+          content: newComment,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setReviewDetail((prevDetail) => ({
+        ...prevDetail,
+        comments: [...prevDetail.comments, response.data],
+      }));
+      setNewComment(""); // 댓글 작성 후 입력란 초기화
+    } catch (error) {
+      console.error(
+        "Failed to submit comment",
+        error.response || error.message
+      );
+    }
+  };
 
   if (!reviewDetail) {
     return <div>Loading...</div>;
@@ -36,15 +100,15 @@ const ReviewPage = () => {
                 {reviewDetail.culture.name}
               </div>
               <div className="review-detail-nickname">
-                {reviewDetail.reivewer.username} 님
+                {reviewDetail.reviewer.username} 님
               </div>
             </div>
           </div>
           <div className="review-detail-item-middle">
             <img
               className="review-detail-item-image"
-              src="reviewDetail.reviewImageUrl1"
-              alt={"리뷰이미지"}
+              src={reviewDetail.reviewImageUrl1}
+              alt="리뷰 이미지"
             />
           </div>
           <div className="review-detail-item-bottom">
@@ -64,7 +128,12 @@ const ReviewPage = () => {
 
         <div className="review-detail-comment-box">
           <div className="review-comment-top">
-            <button className="review-comment-like-btn">좋아요 버튼</button>
+            <button
+              className="review-comment-like-btn"
+              onClick={handleLikeToggle}
+            >
+              {isLiked ? "좋아요 취소" : "후기 좋아요"}
+            </button>
           </div>
 
           <div className="review-comment-middle">
@@ -85,12 +154,20 @@ const ReviewPage = () => {
               </div>
             ))}
           </div>
+
           <div className="review-comment-bottom">
             <textarea
               className="review-comment-write-form"
               placeholder="댓글 작성 요망"
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
             ></textarea>
-            <button className="review-comment-write-upload">댓글 게시</button>
+            <button
+              className="review-comment-write-upload"
+              onClick={handleCommentSubmit}
+            >
+              댓글 게시
+            </button>
           </div>
         </div>
       </div>
@@ -115,17 +192,16 @@ const ReviewDetail = styled.div`
 
   .review-detail-item-box {
     width: 1004.092px;
-    height: 989.055px;
+    height: 1100.055px;
     background: #fff;
     border-radius: 15px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     padding: 20px;
-    padding: 2px;
   }
 
   .review-detail-item-top {
     padding: 15px 0px 0px 70px;
-    height: 180px;
+    height: auto;
     display: flex;
     flex-direction: column;
     align-items: right;
@@ -133,7 +209,7 @@ const ReviewDetail = styled.div`
     width: 800;
 
     .review-detail-title {
-      font-size: 75.113px;
+      font-size: 60px;
       font-weight: 700;
       color: #e02525;
       margin-top: 20px;
@@ -141,7 +217,7 @@ const ReviewDetail = styled.div`
     .review-detail-type-nickname {
       display: flex;
       gap: 10px;
-      margin-top: 10px;
+      margin-top: 15px;
     }
 
     .review-detail-type {
@@ -153,7 +229,7 @@ const ReviewDetail = styled.div`
     .review-detail-nickname {
       color: #000;
       text-align: center;
-      font-size: 36.506px;
+      font-size: 40px;
       margin-left: 40px;
     }
   }
@@ -190,9 +266,10 @@ const ReviewDetail = styled.div`
       .review-detail-likes {
         font-size: 24px;
         color: #e02525;
-        background-color: #df2525;
+        background-color: #e74c3c;
         border-radius: 4px;
         color: #fff;
+        padding: 10px;
       }
 
       .review-detail-comments {
@@ -200,9 +277,10 @@ const ReviewDetail = styled.div`
         border-width: 0.766px;
         background-color: #fff;
         border-radius: 4px;
-        border-color: #df2525;
+        border-color: #e74c3c;
         border-style: solid;
         color: #df2525;
+        padding: 10px;
       }
     }
   }
@@ -223,12 +301,18 @@ const ReviewDetail = styled.div`
 
     .review-comment-like-btn {
       padding: 10px 20px;
-      background-color: #e02525;
-      color: white;
-      border: none;
-      border-radius: 5px;
+      border: 2px solid #e74c3c;
+      background-color: #fceeec;
+      color: #e74c3c;
+      border-radius: 10px;
       font-size: 24.537px;
+      transition: background-color 0.3s, color 0.3s;
       cursor: pointer;
+
+      &:hover {
+        background-color: #e74c3c;
+        color: #fff;
+      }
     }
   }
 
@@ -244,10 +328,11 @@ const ReviewDetail = styled.div`
     display: flex;
     align-items: center;
     gap: 10px;
+    margin-top: 30px;
 
     .review-comment-profile-image {
-      width: 61px;
-      height: 59.129px;
+      width: 65px;
+      height: 65px;
       border-radius: 50%;
     }
 
@@ -264,8 +349,8 @@ const ReviewDetail = styled.div`
     padding: 10px;
     border-radius: 5px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 910px;
-    height: 87px;
+    width: 800px;
+    height: auto;
     padding: 20px 40px 20px 40px;
   }
 
@@ -273,6 +358,7 @@ const ReviewDetail = styled.div`
   .review-comment-bottom {
     display: flex;
     gap: 10px;
+    margin-top: 60px;
 
     .review-comment-write-form {
       flex: 1;
@@ -287,7 +373,7 @@ const ReviewDetail = styled.div`
 
     .review-comment-write-upload {
       padding: 20px;
-      background-color: #e02525;
+      background-color: #e74c3c;
       color: white;
       border: none;
       border-radius: 20px;

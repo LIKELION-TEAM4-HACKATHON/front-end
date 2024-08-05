@@ -20,7 +20,7 @@ const ReviewWrite = () => {
 
     try {
       const response = await axios.post(
-        "/api/reviews/culture/{cultureId}",
+        "http://3.37.154.200:8080/api/reviews/culture/{cultureId}",
         formData,
         {
           headers: {
