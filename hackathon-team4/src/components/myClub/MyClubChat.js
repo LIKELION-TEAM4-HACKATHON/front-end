@@ -3,7 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import { useParams } from "react-router-dom";
 
-const ClubChat = () => {
+const MyClubChat = () => {
   const { clubId } = useParams();
   const [chats, setChats] = useState([]);
   const [leaderId, setLeaderId] = useState(null);
@@ -214,4 +214,4 @@ const Chatwrite = styled.div`
   }
 `;
 
-export default ClubChat;
+export default MyClubChat;
