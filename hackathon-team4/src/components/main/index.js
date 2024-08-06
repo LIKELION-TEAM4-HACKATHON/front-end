@@ -57,7 +57,7 @@ const Main = () => {
           </div>
         </Slider>
       </div>
-      <div className="popular1">인기 뭐햐</div>
+      <div className="popular1">인기 머햐</div>
       <div className="doing">
         {popularCultures.map((culture) => (
           <PopularDoing key={culture.cultureId}>
@@ -76,7 +76,7 @@ const Main = () => {
       <div className="review">
         <div className="review-text-box">
           <div className="popular2">인기 후기</div>
-          <div className="review-text1">오늘 뭐햐?</div>
+          <div className="review-text1">오늘 머햐?</div>
           <div className="review-text2">
             추천으로
             <br />

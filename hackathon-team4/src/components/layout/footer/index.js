@@ -101,7 +101,7 @@ const Footer = () => {
         </div>
         <div className="lower">
           <div className="text1">멋쟁이사자처럼 서울과학기술대학교</div>
-          <div className="text2">중앙해커톤 4팀 [ 요즘 애들 뭐햐? ]</div>
+          <div className="text2">중앙해커톤 4팀 [ 요즘 애들 머햐? ]</div>
           <div className="text3">홍석주 박신우 김도연 박신형 오세연 임채영</div>
         </div>
       </div>

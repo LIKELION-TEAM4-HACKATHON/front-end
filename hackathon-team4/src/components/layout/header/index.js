@@ -175,7 +175,7 @@ const Header = () => {
             <div className="myChat">
               <StyledLink to="/">나의 모임 찾기</StyledLink>
             </div>
-            <StyledLink to="/culture">요즘 뭐햐</StyledLink>
+            <StyledLink to="/culture">요즘 머햐</StyledLink>
             <StyledLink to="/club">모임 찾기</StyledLink>
             <StyledLink to="/review">후기</StyledLink>
           </div>
