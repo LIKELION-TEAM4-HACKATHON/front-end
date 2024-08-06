@@ -1,4 +1,6 @@
+import React from "react";
 import styled from "styled-components";
+import axios from "axios";
 
 const ClubInfoSection = styled.section`
   width: 100%;
@@ -184,6 +186,38 @@ const ContentCard = styled.section`
 `;
 
 const ClubInfo = ({ club }) => {
+  const handleJoinClick = async () => {
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      alert("로그인이 필요합니다.");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `http://3.37.154.200:8080/api/clubs/${club.clubId}/join`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      alert(response.data.message);
+    } catch (error) {
+      alert(
+        `Error: ${
+          error.response && error.response.data && error.response.data.message
+            ? error.response.data.message
+            : "An error occurred while joining the club."
+        }`
+      );
+    }
+  };
+
   if (!club) {
     return <div>Loading...</div>;
   }
@@ -207,13 +241,14 @@ const ClubInfo = ({ club }) => {
             <div className="hashtag">#{club.genderRestriction}</div>
             <div className="hashtag">#{club.ageRestriction}</div>
           </div>
-
           <div className="due-date">
             {new Date(club.meetingDate).toLocaleDateString()} 모임
           </div>
         </div>
       </InfoCard>
-      <div className="joinBtn">신청하기</div>
+      <div className="joinBtn" onClick={handleJoinClick}>
+        신청하기
+      </div>
       <div className="bottomBox">
         <LeaderCard>
           <img
