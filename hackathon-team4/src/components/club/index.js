@@ -71,8 +71,8 @@ const Club = () => {
     "종로 중구 용산",
   ];
 
-  const [selectedHashtags, setSelectedHashtags] = useState([]);
-  const [selectedRegions, setSelectedRegions] = useState([]);
+  const [selectedHashtags, setSelectedHashtags] = useState(["전체"]);
+  const [selectedRegions, setSelectedRegions] = useState(["전체"]);
   const [clubs, setClubs] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -86,57 +86,57 @@ const Club = () => {
 
   const toggleSelection = (item, setSelectedItems, items) => {
     setSelectedItems((prev) => {
-      if (item === "전체") {
-        if (prev.includes("전체")) {
-          return [];
-        }
-        return ["전체", ...items.filter((i) => i !== "전체")];
-      } else {
-        const updatedSelection = prev.includes(item)
-          ? prev.filter((i) => i !== item)
-          : [...prev.filter((i) => i !== "전체"), item];
+      let updatedSelection;
 
-        if (prev.includes("전체")) {
-          return updatedSelection;
+      if (item === "전체") {
+        updatedSelection = prev.includes("전체") ? [] : ["전체"];
+      } else {
+        if (prev.includes(item)) {
+          updatedSelection = prev.filter((i) => i !== item);
+        } else {
+          updatedSelection = [...prev.filter((i) => i !== "전체"), item];
         }
         if (updatedSelection.length === items.length - 1) {
-          return ["전체", ...updatedSelection];
+          updatedSelection = ["전체"];
         }
-        return updatedSelection;
       }
+      return updatedSelection.length === 0 ? ["전체"] : updatedSelection;
     });
   };
 
   const fetchClubs = useCallback(async () => {
     try {
-      const categoryId = selectedHashtags.includes("전체")
-        ? 0
-        : hashtags.indexOf(selectedHashtags[0]) + 1;
+      const selectedCategoryIds = selectedHashtags.includes("전체")
+        ? [0]
+        : selectedHashtags.map((hashtag) => hashtags.indexOf(hashtag));
 
-      let regionId;
-      if (selectedRegions.includes("전체")) {
-        regionId = 0;
-      } else if (selectedRegions.includes("무관")) {
-        regionId = 100;
-      } else {
-        regionId = regions.indexOf(selectedRegions[0]) + 1;
-      }
+      const selectedRegionIds = selectedRegions.includes("전체")
+        ? [0]
+        : selectedRegions.includes("무관")
+        ? [100]
+        : selectedRegions.map((region) => regions.indexOf(region));
 
-      const response = await axios.get(
-        "http://3.37.154.200:8080/api/clubs/list",
-        {
-          params: {
-            page: page - 1,
-            sort: sort,
-            categoryId: categoryId,
-            regionId: regionId,
-          },
-        }
+      const promises = selectedCategoryIds.flatMap((categoryId) =>
+        selectedRegionIds.map((regionId) =>
+          axios.get("http://3.37.154.200:8080/api/clubs/list", {
+            params: {
+              page: page - 1,
+              sort: sort,
+              cultureCategoryId: categoryId,
+              regionId: regionId,
+            },
+          })
+        )
       );
 
-      const { content, totalPages } = response.data;
-      setClubs(content);
-      setTotalPages(totalPages);
+      const responses = await Promise.all(promises);
+      const allClubs = responses.flatMap((response) => response.data.content);
+      const uniqueClubs = Array.from(
+        new Set(allClubs.map((club) => club.clubId))
+      ).map((id) => allClubs.find((club) => club.clubId === id));
+
+      setClubs(uniqueClubs);
+      setTotalPages(responses[0].data.totalPages); // Assuming all responses have the same totalPages
     } catch (error) {
       console.error("Failed to fetch clubs:", error);
     }
