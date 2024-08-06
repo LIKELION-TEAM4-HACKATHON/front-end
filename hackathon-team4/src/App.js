@@ -13,6 +13,7 @@ import ReviewWrite from "./components/ReviewPage/ReviewWrite.js";
 import CulturePage from "./components/CulturePage/index.js";
 import ReviewDetail from "./components/ReviewPage/index.js";
 import ClubInfoContainer from "./components/club/ClubInfoContainer.js"; // 변경된 파일
+import MyClub from "./components/myClub/MyClubDetail.js";
 
 const App = () => {
   return (
@@ -25,6 +26,7 @@ const App = () => {
             <Route path="profileEdit" element={<ProfileEdit />} />
           </Route>
           <Route path="/club" element={<Club />} />
+          <Route path="/myclub" element={<MyClub />} />
           <Route path="/clubs/:clubId" element={<ClubInfoContainer />} />
           <Route path="/culture" element={<CulturePage />} />
           <Route path="/cultures/:cultureId" element={<CultureDetail />}>

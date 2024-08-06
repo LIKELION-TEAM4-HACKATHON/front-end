@@ -4,6 +4,7 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 const Arrow = ({ onClick, direction, src }) => (
   <div
@@ -60,17 +61,19 @@ const Main = () => {
       <div className="popular1">인기 머햐</div>
       <div className="doing">
         {popularCultures.map((culture) => (
-          <PopularDoing key={culture.cultureId}>
-            <img src={culture.cultureImageUrl} alt={culture.name} />
-            <div className="doing-text-content">
-              <div className="popular-doing-title">{culture.name}</div>
-              <div className="popular-doing-contents">{culture.summary}</div>
-            </div>
-            <div className="count">
-              <div className="like-count">관심 {culture.interestCount}</div>
-              <div className="chat-count">모임 {culture.clubCount}</div>
-            </div>
-          </PopularDoing>
+          <Link to={`/culture/${culture.cultureId}`} key={culture.cultureId}>
+            <PopularDoing key={culture.cultureId}>
+              <img src={culture.cultureImageUrl} alt={culture.name} />
+              <div className="doing-text-content">
+                <div className="popular-doing-title">{culture.name}</div>
+                <div className="popular-doing-contents">{culture.summary}</div>
+              </div>
+              <div className="count">
+                <div className="like-count">관심 {culture.interestCount}</div>
+                <div className="chat-count">모임 {culture.clubCount}</div>
+              </div>
+            </PopularDoing>
+          </Link>
         ))}
       </div>
       <div className="review">
@@ -86,55 +89,61 @@ const Main = () => {
         </div>
         <div className="review-api-box">
           {popularReviews.map((review) => (
-            <PopularReview key={review.reviewId}>
-              <div className="review-text-content">
-                <div className="writer">
-                  <img
-                    src={review.reviewer.profileImageUrl}
-                    alt={review.reviewer.username}
-                  />
-                  <div className="nickname">{review.reviewer.username} 님</div>
+            <Link to={`/review/${review.reviewId}`} key={review.reviewId}>
+              <PopularReview key={review.reviewId}>
+                <div className="review-text-content">
+                  <div className="writer">
+                    <img
+                      src={review.reviewer.profileImageUrl}
+                      alt={review.reviewer.username}
+                    />
+                    <div className="nickname">
+                      {review.reviewer.username} 님
+                    </div>
+                  </div>
+                  <div className="popular-review-title">{review.title}</div>
+                  <div className="popular-review-contents">
+                    {review.cultureName}
+                  </div>
+                  <div className="count">
+                    <div className="like-count">좋아요 {review.likeCount}</div>
+                    <div className="chat-count">댓글 {review.commentCount}</div>
+                  </div>
                 </div>
-                <div className="popular-review-title">{review.title}</div>
-                <div className="popular-review-contents">
-                  {review.cultureName}
+                <div className="review-image-box">
+                  <img src={review.reviewImageUrl} alt={review.title} />
+                  <div className="date">
+                    작성일: {new Date(review.createdDate).toLocaleDateString()}
+                  </div>
                 </div>
-                <div className="count">
-                  <div className="like-count">좋아요 {review.likeCount}</div>
-                  <div className="chat-count">댓글 {review.commentCount}</div>
-                </div>
-              </div>
-              <div className="review-image-box">
-                <img src={review.reviewImageUrl} alt={review.title} />
-                <div className="date">
-                  작성일: {new Date(review.createdDate).toLocaleDateString()}
-                </div>
-              </div>
-            </PopularReview>
+              </PopularReview>
+            </Link>
           ))}
         </div>
       </div>
       <div className="popular1">마감 임박 모임</div>
       <div className="chat">
         {recentClubs.map((club) => (
-          <PopularChat key={club.clubId}>
-            <div className="popular-chat-content">
-              <div className="chat-title-box">
-                <img src={club.leaderProfileImage} alt={club.title} />
-                <div className="chat-title">{club.title}</div>
+          <Link to={`/club/${club.clubId}`} key={club.clubId}>
+            <PopularChat key={club.clubId}>
+              <div className="popular-chat-content">
+                <div className="chat-title-box">
+                  <img src={club.leaderProfileImage} alt={club.title} />
+                  <div className="chat-title">{club.title}</div>
+                </div>
+                <div className="region">{club.regionName}</div>
+                <div className="category">{club.cultureName}</div>
+                <div className="due-date">모임 날짜: {club.meetingDate}</div>
+                <div className="hashtags-box">
+                  <span className="hashtag">#{club.genderRestriction}</span>
+                  <span className="hashtag">#{club.ageRestriction}</span>
+                </div>
+                <div className="limit">
+                  {club.currentParticipant}/{club.maxParticipant}
+                </div>
               </div>
-              <div className="region">{club.regionName}</div>
-              <div className="category">{club.cultureName}</div>
-              <div className="due-date">모임 날짜: {club.meetingDate}</div>
-              <div className="hashtags-box">
-                <span className="hashtag">#{club.genderRestriction}</span>
-                <span className="hashtag">#{club.ageRestriction}</span>
-              </div>
-              <div className="limit">
-                {club.currentParticipant}/{club.maxParticipant}
-              </div>
-            </div>
-          </PopularChat>
+            </PopularChat>
+          </Link>
         ))}
       </div>
     </MainSection>
