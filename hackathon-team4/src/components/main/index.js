@@ -61,7 +61,7 @@ const Main = () => {
       <div className="popular1">인기 머햐</div>
       <div className="doing">
         {popularCultures.map((culture) => (
-          <Link to={`/culture/${culture.cultureId}`} key={culture.cultureId}>
+          <Link to={`/cultures/${culture.cultureId}`} key={culture.cultureId}>
             <PopularDoing key={culture.cultureId}>
               <img src={culture.cultureImageUrl} alt={culture.name} />
               <div className="doing-text-content">
@@ -89,7 +89,7 @@ const Main = () => {
         </div>
         <div className="review-api-box">
           {popularReviews.map((review) => (
-            <Link to={`/review/${review.reviewId}`} key={review.reviewId}>
+            <Link to={`/reviews/${review.reviewId}`} key={review.reviewId}>
               <PopularReview key={review.reviewId}>
                 <div className="review-text-content">
                   <div className="writer">
@@ -124,7 +124,7 @@ const Main = () => {
       <div className="popular1">마감 임박 모임</div>
       <div className="chat">
         {recentClubs.map((club) => (
-          <Link to={`/club/${club.clubId}`} key={club.clubId}>
+          <Link to={`/clubs/${club.clubId}`} key={club.clubId}>
             <PopularChat key={club.clubId}>
               <div className="popular-chat-content">
                 <div className="chat-title-box">
@@ -153,6 +153,11 @@ const Main = () => {
 const MainSection = styled.div`
   width: 100%;
   font-family: GmarketSans;
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
 
   .banner {
     margin-top: 58px;
