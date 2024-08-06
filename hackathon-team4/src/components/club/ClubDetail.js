@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import axios from "axios";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import ClubChat from "./ClubChat";
@@ -83,7 +85,7 @@ const ClubDetailSection = styled.section`
     color: #fff;
     font-family: GmarketSans;
     font-weight: 500;
-    font-size: 21px;
+    font-size: 18px;
     cursor: pointer;
   }
 
@@ -112,15 +114,33 @@ const StyledLink = styled(Link)`
 `;
 
 const ClubDetail = () => {
+  const { clubId } = useParams();
+  const [club, setClub] = useState(null);
   const [activeTab, setActiveTab] = useState("chat");
+
+  useEffect(() => {
+    // 클럽 상세 정보 가져오기
+    const fetchClubDetail = async () => {
+      try {
+        const response = await axios.get(`/clubs/${clubId}`);
+        setClub(response.data);
+      } catch (error) {
+        console.error("Failed to fetch club details:", error);
+      }
+    };
+
+    fetchClubDetail();
+  }, [clubId]);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
 
+  if (!club) return <div>Loading...</div>;
+
   return (
     <ClubDetailSection>
-      <div className="clubDetailTitle">모임 설명</div>
+      <div className="clubDetailTitle">{club.title}</div>
       <div className="container">
         <div className="tabContainer">
           <div className="tabBox">
@@ -144,7 +164,7 @@ const ClubDetail = () => {
         <div className="clubDetailContainerWrapper">
           <div className="clubDetailContainer">
             {activeTab === "chat" && <ClubChat />}
-            {activeTab === "info" && <ClubInfo />}
+            {activeTab === "info" && <ClubInfo club={club} />}
           </div>
         </div>
       </div>

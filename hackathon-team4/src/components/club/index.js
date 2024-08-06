@@ -1,12 +1,11 @@
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import ClubView from "./ClubView";
+import axios from "axios";
 
 const ClubSection = styled.section`
   width: 100%;
   height: auto;
-  margin-bottom: 70px;
-
   .profileTitle {
     color: #000;
     font-family: GmarketSans;
@@ -14,11 +13,9 @@ const ClubSection = styled.section`
     font-weight: 700;
     margin: 78px 0 38px 200px;
   }
-
   .filterBox {
-    margin: 0 0 58px 200px;
+    margin: 0 0 58px 120px;
   }
-
   .btnContainer {
     margin-bottom: 20px;
     display: flex;
@@ -63,18 +60,29 @@ const Club = () => {
   ];
   const regions = [
     "전체",
+    "무관",
     "동작 관악 금천",
-    "중랑 동대문 성동 광진",
     "강서 양천 영등포 구로",
-    "송파 강동",
     "은평 서대문 마포",
-    "서초 강남",
     "도봉 강북 성북 노원",
+    "중랑 동대문 성동 광진",
+    "송파 강동",
+    "서초 강남",
     "종로 중구 용산",
   ];
 
   const [selectedHashtags, setSelectedHashtags] = useState([]);
   const [selectedRegions, setSelectedRegions] = useState([]);
+  const [clubs, setClubs] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [sort, setSort] = useState("createdDate");
+
+  const handlePageChange = (newPage) => {
+    if (newPage > 0 && newPage <= totalPages) {
+      setPage(newPage);
+    }
+  };
 
   const toggleSelection = (item, setSelectedItems, items) => {
     setSelectedItems((prev) => {
@@ -99,31 +107,44 @@ const Club = () => {
     });
   };
 
+  const fetchClubs = useCallback(async () => {
+    try {
+      const categoryId = selectedHashtags.includes("전체")
+        ? 0
+        : hashtags.indexOf(selectedHashtags[0]) + 1;
+
+      let regionId;
+      if (selectedRegions.includes("전체")) {
+        regionId = 0;
+      } else if (selectedRegions.includes("무관")) {
+        regionId = 100;
+      } else {
+        regionId = regions.indexOf(selectedRegions[0]) + 1;
+      }
+
+      const response = await axios.get(
+        "http://3.37.154.200:8080/api/clubs/list",
+        {
+          params: {
+            page: page - 1,
+            sort: sort,
+            categoryId: categoryId,
+            regionId: regionId,
+          },
+        }
+      );
+
+      const { content, totalPages } = response.data;
+      setClubs(content);
+      setTotalPages(totalPages);
+    } catch (error) {
+      console.error("Failed to fetch clubs:", error);
+    }
+  }, [page, selectedHashtags, selectedRegions, sort, hashtags, regions]);
+
   useEffect(() => {
-    const handleChange = () => {
-      setSelectedHashtags((prev) => {
-        if (
-          prev.includes("전체") &&
-          !hashtags.every((item) => prev.includes(item))
-        ) {
-          return prev.filter((item) => item !== "전체");
-        }
-        return prev;
-      });
-
-      setSelectedRegions((prev) => {
-        if (
-          prev.includes("전체") &&
-          !regions.every((item) => prev.includes(item))
-        ) {
-          return prev.filter((item) => item !== "전체");
-        }
-        return prev;
-      });
-    };
-
-    handleChange();
-  }, [selectedHashtags, selectedRegions]);
+    fetchClubs();
+  }, [fetchClubs]);
 
   return (
     <ClubSection>
@@ -162,7 +183,12 @@ const Club = () => {
           ))}
         </div>
       </div>
-      <ClubView />
+      <ClubView
+        clubs={clubs}
+        page={page}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
+      />
     </ClubSection>
   );
 };

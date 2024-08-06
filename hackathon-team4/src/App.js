@@ -25,7 +25,7 @@ const App = () => {
             <Route path="profileEdit" element={<ProfileEdit />} />
           </Route>
           <Route path="/club" element={<Club />} />
-          <Route path="/clubDetail" element={<ClubDetail />} />
+          <Route path="/clubs/:clubId" element={<ClubDetail />} />
           <Route path="/culture" element={<CulturePage />} />
           <Route path="/cultures/:cultureId" element={<CultureDetail />}>
             <Route path="info" element={<CultureInfo />} />
