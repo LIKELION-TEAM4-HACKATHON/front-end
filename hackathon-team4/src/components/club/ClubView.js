@@ -193,7 +193,7 @@ const ClubView = ({ clubs, page, totalPages, onPageChange }) => {
                   <div className="chat-title-box">
                     <img
                       className="profile-img"
-                      src={club.leaderProfileImageUrl}
+                      src={club.leaderProfileImage}
                       alt="프로필 이미지"
                     />
                     <div className="chat-title">{club.cultureName} 모임</div>

@@ -8,11 +8,11 @@ import CultureDetail from "./components/culturedetail/index.js";
 import CultureInfo from "./components/culturedetail/CultureInfo.js";
 import CultureMeet from "./components/culturedetail/CultureMeet.js";
 import Club from "./components/club/index.js";
-import ClubDetail from "./components/club/ClubDetail.js";
 import ReviewPage from "./components/ReviewPage/ReviewSimple.js";
 import ReviewWrite from "./components/ReviewPage/ReviewWrite.js";
 import CulturePage from "./components/CulturePage/index.js";
 import ReviewDetail from "./components/ReviewPage/index.js";
+import ClubInfoContainer from "./components/club/ClubInfoContainer.js"; // 변경된 파일
 
 const App = () => {
   return (
@@ -25,7 +25,7 @@ const App = () => {
             <Route path="profileEdit" element={<ProfileEdit />} />
           </Route>
           <Route path="/club" element={<Club />} />
-          <Route path="/clubs/:clubId" element={<ClubDetail />} />
+          <Route path="/clubs/:clubId" element={<ClubInfoContainer />} />
           <Route path="/culture" element={<CulturePage />} />
           <Route path="/cultures/:cultureId" element={<CultureDetail />}>
             <Route path="info" element={<CultureInfo />} />
