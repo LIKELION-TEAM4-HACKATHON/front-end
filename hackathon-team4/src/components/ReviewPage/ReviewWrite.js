@@ -8,6 +8,7 @@ const ReviewWrite = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [images, setImages] = useState([]);
+  const [previews, setPreviews] = useState([]); // 이미지 미리보기를 위한 상태 추가
   const [cultureName, setCultureName] = useState("");
 
   useEffect(() => {
@@ -25,8 +26,26 @@ const ReviewWrite = () => {
     fetchCultureName();
   }, [cultureId]);
 
+  // 이미지 변경 핸들러 수정
   const handleImageChange = (e) => {
-    setImages([...images, ...e.target.files]);
+    const files = Array.from(e.target.files);
+    setImages((prevImages) => [...prevImages, ...files]);
+
+    const fileReaders = [];
+    const imagePreviews = files.map((file) => {
+      const reader = new FileReader();
+      fileReaders.push(reader);
+      return new Promise((resolve) => {
+        reader.onload = (event) => {
+          resolve(event.target.result);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+
+    Promise.all(imagePreviews).then((newPreviews) => {
+      setPreviews((prevPreviews) => [...prevPreviews, ...newPreviews]);
+    });
   };
 
   const handleSubmit = async () => {
@@ -77,6 +96,18 @@ const ReviewWrite = () => {
             className="review-write-image-upload-input"
             onChange={handleImageChange}
           />
+          {previews.length > 0 && (
+            <div className="image-previews">
+              {previews.map((preview, index) => (
+                <img
+                  key={index}
+                  src={preview}
+                  alt={`Preview ${index}`}
+                  className="image-preview"
+                />
+              ))}
+            </div>
+          )}
         </div>
         <textarea
           className="review-write-form-box"
@@ -91,6 +122,7 @@ const ReviewWrite = () => {
     </ReviewWriteContainer>
   );
 };
+
 const ReviewWriteContainer = styled.div`
   display: flex;
   justify-content: center;
@@ -176,6 +208,24 @@ const ReviewWriteContainer = styled.div`
     cursor: pointer;
   }
 
+  /* 이미지 미리보기 스타일 수정 */
+  .image-previews {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+
+    .image-preview {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: cover;
+    }
+  }
+
   .review-write-form-box {
     width: 100%;
     height: 339px;
@@ -189,4 +239,5 @@ const ReviewWriteContainer = styled.div`
     margin-top: 30px;
   }
 `;
+
 export default ReviewWrite;
