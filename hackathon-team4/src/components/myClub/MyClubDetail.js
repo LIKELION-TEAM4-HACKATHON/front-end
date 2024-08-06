@@ -1,10 +1,8 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import axios from "axios";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import ClubChat from "./MyClubChat";
-import ClubInfo from "./MyClubInfo";
+import MyClubChat from "./MyClubChat";
+import MyClubInfo from "./MyClubInfo";
 
 const MyClubDetailSection = styled.section`
   width: 100%;
@@ -113,31 +111,16 @@ const StyledLink = styled(Link)`
   display: flex;
 `;
 
-const MyClubDetail = () => {
-  const { clubId } = useParams();
-  const [club, setClub] = useState(null);
+const MyClubDetail = ({ club }) => {
   const [activeTab, setActiveTab] = useState("chat");
-
-  useEffect(() => {
-    const fetchClubDetail = async () => {
-      try {
-        const response = await axios.get(
-          `http://3.37.154.200:8080/api/clubs/${clubId}`
-        );
-        setClub(response.data);
-      } catch (error) {
-        console.error("Failed to fetch club details:", error);
-      }
-    };
-
-    fetchClubDetail();
-  }, [clubId]);
 
   const handleTabClick = (tab) => {
     setActiveTab(tab);
   };
 
-  if (!club) return <div>Loading...</div>;
+  if (!club) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <MyClubDetailSection>
@@ -158,14 +141,14 @@ const MyClubDetail = () => {
               모임 상세
             </div>
           </div>
-          <StyledLink to="/reviewWrite">
+          <StyledLink to={`/reviewWrite/${club.id}`}>
             <div className="toReview">후기 쓰러가기</div>
           </StyledLink>
         </div>
         <div className="clubDetailContainerWrapper">
           <div className="clubDetailContainer">
-            {activeTab === "chat" && <ClubChat />}
-            {activeTab === "info" && <ClubInfo club={club} />}
+            {activeTab === "chat" && <MyClubChat club={club} />}
+            {activeTab === "info" && <MyClubInfo club={club} />}
           </div>
         </div>
       </div>
