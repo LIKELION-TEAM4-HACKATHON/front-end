@@ -95,7 +95,7 @@ const Club = () => {
         } else {
           updatedSelection = [...prev.filter((i) => i !== "전체"), item];
         }
-        if (updatedSelection.length === items.length - 1) {
+        if (updatedSelection.length === items.length) {
           updatedSelection = ["전체"];
         }
       }
@@ -111,7 +111,7 @@ const Club = () => {
 
       const selectedRegionIds = selectedRegions.includes("전체")
         ? [0]
-        : selectedRegions.map((region) => regions.indexOf(region) - 1);
+        : selectedRegions.map((region) => regions.indexOf(region));
 
       const promises = selectedCategoryIds.flatMap((categoryId) =>
         selectedRegionIds.map((regionId) =>
@@ -133,7 +133,7 @@ const Club = () => {
       ).map((id) => allClubs.find((club) => club.clubId === id));
 
       setClubs(uniqueClubs);
-      setTotalPages(responses[0].data.totalPages); // Assuming all responses have the same totalPages
+      setTotalPages(responses[0].data.totalPages);
     } catch (error) {
       console.error("Failed to fetch clubs:", error);
     }
