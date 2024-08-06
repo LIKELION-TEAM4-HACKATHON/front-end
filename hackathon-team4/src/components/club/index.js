@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import ClubView from "./ClubView";
 import axios from "axios";
 
@@ -50,32 +50,32 @@ const RegionButton = styled(Button)`
 `;
 
 const Club = () => {
-  const hashtags = [
-    "전체",
-    "'나' 찾기",
-    "예술과 교양",
-    "야외활동",
-    "실내활동",
-    "배움",
-  ];
-  const regions = [
-    "전체",
-    "동작 관악 금천",
-    "강서 양천 영등포 구로",
-    "은평 서대문 마포",
-    "도봉 강북 성북 노원",
-    "중랑 동대문 성동 광진",
-    "송파 강동",
-    "서초 강남",
-    "종로 중구 용산",
-  ];
+  const hashtags = useMemo(
+    () => ["전체", "'나' 찾기", "예술과 교양", "야외활동", "실내활동", "배움"],
+    []
+  );
+
+  const regions = useMemo(
+    () => [
+      "전체",
+      "동작 관악 금천",
+      "강서 양천 영등포 구로",
+      "은평 서대문 마포",
+      "도봉 강북 성북 노원",
+      "중랑 동대문 성동 광진",
+      "송파 강동",
+      "서초 강남",
+      "종로 중구 용산",
+    ],
+    []
+  );
 
   const [selectedHashtags, setSelectedHashtags] = useState(["전체"]);
   const [selectedRegions, setSelectedRegions] = useState(["전체"]);
   const [clubs, setClubs] = useState([]);
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [sort, setSort] = useState("createdDate");
+  const [sort] = useState("createdDate");
 
   const handlePageChange = (newPage) => {
     if (newPage > 0 && newPage <= totalPages) {
