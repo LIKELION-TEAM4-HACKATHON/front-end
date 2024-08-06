@@ -127,7 +127,7 @@ const ReviewListItem = styled.div`
   }
 
   .review-list-likes {
-    padding: 2px 5px 2px 10px;
+    padding: 5px 10px;
     background-color: #df2525;
     border-radius: 4px;
     font-size: 12px;
@@ -161,7 +161,6 @@ const ReviewListItem = styled.div`
     background-size: cover;
     background-position: center;
     flex-direction: column;
-    margin-left: 10px;
   }
 `;
 
