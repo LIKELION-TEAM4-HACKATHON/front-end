@@ -128,6 +128,7 @@ const SearchContainer = styled.div`
   text-align: center;
 
   input {
+    font-family: GmarketSans;
     padding: 10px 0px 10px 20px;
     width: 738px;
     height: 43px;
@@ -183,13 +184,13 @@ const ReviewListItem = styled.div`
   border-radius: 15.314px;
   box-shadow: 0 2px 10.796px 0px rgba(0, 0, 0, 0.25);
   cursor: pointer;
+  padding: 10px 30px;
   margin-bottom: 20px;
-  width: 1800px;
 
   .review-list-item-box {
     display: flex;
     align-items: center;
-    width: 1400px;
+    width: 1000px;
     height: 200px;
   }
 
@@ -197,7 +198,7 @@ const ReviewListItem = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 457px;
+    padding-right: 30px;
     height: 143.462px;
   }
 
@@ -229,14 +230,14 @@ const ReviewListItem = styled.div`
 
   .review-list-title {
     color: red;
-    font-size: 35.159px;
+    font-size: 30px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
   }
 
   .review-list-type {
-    font-size: 14px;
+    font-size: 18px;
     color: #666;
     margin-bottom: 8px;
   }
@@ -247,21 +248,20 @@ const ReviewListItem = styled.div`
   }
 
   .review-list-likes {
-    padding: 2px 5px 2px 10px;
+    padding: 5px 10px;
     background-color: #df2525;
     border-radius: 4px;
-    font-size: 12px;
+    font-size: 17px;
+    border: 1.5px solid #df2525;
     color: #fff;
   }
 
   .review-list-comments {
-    padding: 2px 10px 2px 5px;
+    padding: 5px 10px;
     background-color: #fff;
     border-radius: 4px;
-    border-width: 0.766px;
-    border-style: solid;
-    border-color: #df2525;
-    font-size: 12px;
+    border: 1.5px solid #df2525;
+    font-size: 17px;
     color: #df2525;
   }
 
@@ -269,7 +269,7 @@ const ReviewListItem = styled.div`
     display: flex;
     flex-direction: column;
     text-align: right;
-    font-size: 12px;
+    font-size: 20px;
     color: #999;
     gap: 0px;
   }
@@ -281,7 +281,7 @@ const ReviewListItem = styled.div`
     background-size: cover;
     background-position: center;
     flex-direction: column;
-    margin-left: 10px;
+    margin-left: 30px;
   }
 `;
 

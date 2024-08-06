@@ -290,7 +290,6 @@ const MainSection = styled.div`
     margin: 0 152px 84px 152px;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(478px, 1fr));
-    gap: 80px;
   }
 `;
 
@@ -394,7 +393,7 @@ const PopularReview = styled.div`
     font-family: KoddiUDOnGothic-Regular;
     font-size: 18.727px;
     margin-top: 10px;
-    margin-bottom: 80px;
+    margin-bottom: 30px;
   }
 
   .review-image-box {

@@ -159,7 +159,7 @@ const ReviewPage = () => {
           <div className="review-comment-bottom">
             <textarea
               className="review-comment-write-form"
-              placeholder="댓글 작성 요망"
+              placeholder="댓글을 작성해주세요."
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
             ></textarea>
@@ -167,7 +167,7 @@ const ReviewPage = () => {
               className="review-comment-write-upload"
               onClick={handleCommentSubmit}
             >
-              댓글 게시
+              작성
             </button>
           </div>
         </div>
@@ -197,7 +197,8 @@ const ReviewDetail = styled.div`
     background: #fff;
     border-radius: 15px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 20px;
+    padding: 30px;
+    margin: 30px 0;
   }
 
   .review-detail-item-top {
@@ -210,28 +211,26 @@ const ReviewDetail = styled.div`
     width: 800;
 
     .review-detail-title {
-      font-size: 50px;
+      font-size: 40px;
       font-weight: 700;
       color: #e02525;
       margin-top: 20px;
     }
     .review-detail-type-nickname {
       display: flex;
-      gap: 10px;
-      margin: 30px 0px 1px 0px;
+      justify-content: space-between;
+      margin: 15px 0;
     }
 
     .review-detail-type {
       color: #7c7c7c;
-      font-size: 40px;
-      margin-bottom: 10px;
+      font-size: 20px;
     }
 
     .review-detail-nickname {
       color: #000;
       text-align: right;
-      font-size: 40px;
-      margin-left: 150px;
+      font-size: 20px;
     }
   }
 
@@ -251,7 +250,7 @@ const ReviewDetail = styled.div`
     width: 862px;
     height: auto;
     padding: 0px 40px 0px 70px;
-    font-size: 28px;
+    font-size: 25px;
     margin: 20px 0px;
   }
 
@@ -261,17 +260,18 @@ const ReviewDetail = styled.div`
     padding: 15px 70px 0px 70px;
     margin-bottom: 10px;
     width: 800;
+    align-items: center;
 
     .review-detail-date {
-      font-size: 24px;
+      font-size: 20px;
       color: #7c7c7c;
     }
     .review-detail-likes-comments {
       display: flex;
-      gap: 10px;
+      gap: 7px;
 
       .review-detail-likes {
-        font-size: 24px;
+        font-size: 20px;
         color: #fff;
         background-color: #df2525;
         border-radius: 5px;
@@ -281,7 +281,7 @@ const ReviewDetail = styled.div`
       }
 
       .review-detail-comments {
-        font-size: 24px;
+        font-size: 20px;
         color: #e02525;
         background-color: #fff;
         border-radius: 5px;
@@ -295,16 +295,14 @@ const ReviewDetail = styled.div`
   //여기부터 댓글 스타일 부분
 
   .review-detail-comment-box {
-    width: 1004.092px;
+      width: 1050px;
     background: #fceeec;
-    padding: 20px;
     border-radius: 15px;
   }
 
   .review-comment-top {
     display: flex;
     justify-content: flex-end;
-    margin: 10px;
 
     .review-comment-like-btn {
       font-family: GmarketSans;
@@ -314,7 +312,7 @@ const ReviewDetail = styled.div`
       border: none;
       cursor: pointer;
       color: #fff;
-      font-size: 25px;
+      font-size: 20px;
 
       &:hover {
       }
@@ -336,15 +334,14 @@ const ReviewDetail = styled.div`
     margin-top: 30px;
 
     .review-comment-profile-image {
-      width: 65px;
-      height: 65px;
+      width: 40px;
+      height: 40px;
       border-radius: 70%;
     }
 
     .review-comment-profile-nickname {
       font-weight: bold;
-      margin-right: 10px;
-      font-size: 27.331px;
+      font-size: 20px;
       width: 60px;
     }
   }
@@ -352,40 +349,40 @@ const ReviewDetail = styled.div`
     display: block;
     font-size: 24px;
     background: white;
-    border-radius: 5px;
+    border-radius: 8px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 800px;
+    width: 880px;
     height: auto;
     min-height: 30px;
-    padding: 20px 30px;
+    padding: 15px 25px;
   }
 
   //댓글 작성하기
   .review-comment-bottom {
     display: flex;
-    gap: 10px;
-    margin-top: 60px;
+    gap: 20px;
+    margin-top: 30px;
 
     .review-comment-write-form {
       flex: 1;
       padding: 10px;
-      border-radius: 20px;
-      border: 1px solid #ccc;
+      border-radius: 8px;
+      border: none;
       resize: none;
-      height: 50px;
+      height: 60px;
       font-size: 24px;
       box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     }
 
     .review-comment-write-upload {
-      padding: 20px;
+      padding: 5px 15px;
       font-family: GmarketSans;
       background-image: linear-gradient(94deg, #e02525 -14.69%, #7a1414 99.86%);
-      border-radius: 20px;
+      border-radius: 8px;
       border: none;
       cursor: pointer;
       color: #fff;
-      font-size: 24px;
+      font-size: 20px;
     }
   }
 `;
