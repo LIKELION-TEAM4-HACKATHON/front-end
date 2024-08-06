@@ -12,14 +12,15 @@ const InfoContainer = styled.div`
 
 const Content = styled.div`
   padding: 20px;
+
   .culture-title {
-    color: white;
+    color: #df2525;
+    width: auto;
     font-size: 33px;
     margin-top: 10px;
     margin-bottom: 30px;
     margin-left: 0px;
-    background: #df2525;
-    color: white;
+    font-weight: bold;
   }
 
   .culture-content {
