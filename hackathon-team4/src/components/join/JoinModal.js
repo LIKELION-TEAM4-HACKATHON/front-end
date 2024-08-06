@@ -5,6 +5,7 @@ import JoinInput3 from "./JoinInput3";
 import JoinInput4 from "./JoinInput4";
 import JoinComplete from "./JoinComplete";
 import styled from "styled-components";
+import axios from "axios";
 import api from "../../api";
 
 const NextButtonContainer = styled.div`
@@ -89,7 +90,9 @@ const JoinModal = ({
   const handleNext = async () => {
     if (step === 1 && isStep1Valid) {
       try {
-        const response = await api.get(`/auth/email?email=${email}`);
+        const response = await axios.get(
+          `http://3.37.154.200:8080/api/auth/email?email=${email}`
+        );
         if (response.data.message === "이메일 중복 점검 성공") {
           setStep(2);
         }
@@ -102,7 +105,9 @@ const JoinModal = ({
       }
     } else if (step === 2 && isStep2Valid) {
       try {
-        const response = await api.get(`/auth/username?username=${nickname}`);
+        const response = await axios.get(
+          `http://3.37.154.200:8080/api/auth/username?username=${nickname}`
+        );
         if (response.data.message === "닉네임 중복 점검 성공") {
           setStep(3);
         }
@@ -161,11 +166,15 @@ const JoinModal = ({
     console.log("Sending data:", data);
 
     try {
-      const response = await api.post("/auth/signup", data, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await axios.post(
+        "http://3.37.154.200:8080/api/auth/signup",
+        data,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       console.log("Response:", response);
 
