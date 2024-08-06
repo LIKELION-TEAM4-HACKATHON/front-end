@@ -137,10 +137,7 @@ const ProfileShow = () => {
   return (
     <ProfilShowSection>
       <TopSection>
-        <ProfileImage
-          src={profileData.profileImageUrl || "images/arrow-right.svg"}
-          alt="Profile"
-        />
+      <ProfileImage src={profileData.profileImageUrl} alt="Profile" />
         <UserInfo>
           <Nickname>{profileData.username}</Nickname>
           <Gender>{profileData.gender}</Gender>

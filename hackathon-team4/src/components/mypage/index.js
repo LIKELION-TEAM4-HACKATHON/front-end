@@ -1,13 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import ProfileEdit from "./ProfileEdit";
 import ProfileShow from "./ProfileShow";
+import MyReviews from "./MyReviews";
+import axios from "axios";
 
 const ProfileSection = styled.section`
   width: 100%;
   height: auto;
-  margin-bottom: 70px;
-
   .profileTitle {
     color: #000;
     font-family: GmarketSans;
@@ -62,13 +62,12 @@ const ProfileSection = styled.section`
 
   .profileContainerWrapper {
     width: 100%;
-    margin: 0 130px;
+    margin: 0 100px;
   }
 
   .profileContainer {
-    width: 850px;
     height: auto;
-    margin-bottom: 130px;
+    margin-bottom: 70px;
     flex-shrink: 0;
     display: flex;
     justify-content: center;
@@ -76,9 +75,56 @@ const ProfileSection = styled.section`
     background: #fff;
     box-shadow: 0px 6.787px 23.923px 0px rgba(0, 0, 0, 0.25);
   }
+  
+  .reviewContainer {
+
+    background-color: #fceeec;
+    width: 100%;
+  }
+
+  .reviewTitle {
+    font-family: GmarketSans;
+    font-size: 30px;
+    margin-bottom: 20px;
+    margin-left: 200px;
+  }
+
 `;
 
 const Profile = () => {
+  const [reviews, setReviews] = useState([]);
+  const [memberInfo, setMemberInfo] = useState([]);
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+          const token = localStorage.getItem("accessToken");
+          if (!token) {
+            throw new Error("No token found");
+          }
+  
+          console.log("Token found:", token);
+  
+          const response = await axios.get(
+            "http://3.37.154.200:8080/api/users/me",
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+  
+          console.log("Profile data fetched:", response.data);
+
+          setMemberInfo(response.data);
+      
+          setReviews(response.data.reviews);
+        } catch (error) {
+          console.error("Failed to fetch profile data", error);
+        }
+    };
+    fetchReviews();
+  }, []);
+
   const [activeTab, setActiveTab] = useState("show");
 
   const handleTabClick = (tab) => {
@@ -105,13 +151,19 @@ const Profile = () => {
             </div>
           </div>
         </div>
-        <div className="profileContainerWrapper">
+               <div className="profileContainerWrapper">
           <div className="profileContainer">
             {activeTab === "show" && <ProfileShow />}
             {activeTab === "edit" && <ProfileEdit />}
           </div>
         </div>
       </div>
+      <div className="reviewTitle">{memberInfo.username} 님이 쓴 후기</div>
+      {activeTab === "show" && 
+        <div className="reviewContainer">
+            <MyReviews reviews={reviews}/>
+        </div> 
+        }
     </ProfileSection>
   );
 };
