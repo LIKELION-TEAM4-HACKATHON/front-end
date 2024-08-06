@@ -14,7 +14,7 @@ const ClubSection = styled.section`
     margin: 78px 0 38px 200px;
   }
   .filterBox {
-    margin: 0 0 58px 120px;
+    margin: 0 0 58px 200px;
   }
   .btnContainer {
     margin-bottom: 20px;
@@ -60,7 +60,6 @@ const Club = () => {
   ];
   const regions = [
     "전체",
-    "무관",
     "동작 관악 금천",
     "강서 양천 영등포 구로",
     "은평 서대문 마포",
@@ -112,9 +111,7 @@ const Club = () => {
 
       const selectedRegionIds = selectedRegions.includes("전체")
         ? [0]
-        : selectedRegions.includes("무관")
-        ? [100]
-        : selectedRegions.map((region) => regions.indexOf(region));
+        : selectedRegions.map((region) => regions.indexOf(region) - 1);
 
       const promises = selectedCategoryIds.flatMap((categoryId) =>
         selectedRegionIds.map((regionId) =>
